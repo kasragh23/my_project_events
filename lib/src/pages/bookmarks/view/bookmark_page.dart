@@ -20,6 +20,7 @@ class BookmarksPage extends GetView<BookmarksController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: controller.back, icon: const Icon(Icons.arrow_back)),
         title: const Text('Bookmarks'),
         foregroundColor: Colors.white,
         backgroundColor: Colors.deepPurple,
@@ -56,6 +57,7 @@ class BookmarksPage extends GetView<BookmarksController> {
                               icon: const Icon(Icons.cancel_outlined))),
                     ),
                   ),
+                  controller.isEmpty.value ? const SizedBox() :
                   Expanded(
                     child: controller.searchingMode.value
                         ? ListView.separated(

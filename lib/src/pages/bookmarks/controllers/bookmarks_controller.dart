@@ -17,6 +17,7 @@ class BookmarksController extends GetxController {
   RxList bookmarkIds = [].obs;
   int? bookmarkId;
   final int userId;
+  RxBool get isEmpty=> getParam().isEmpty.obs;
 
   BookmarksController({required this.userId});
 
@@ -48,8 +49,12 @@ class BookmarksController extends GetxController {
     return param;
   }
 
+  void back(){
+    Get.back(result: true);
+  }
+
   Future<void> getEventsFromBookmark() async {
-    if(getParam().isEmpty) Get.back(result: true);
+    // if(getParam().isEmpty) Get.back(result: true);
     final result = await _repository.getEventsFromBookmark(getParam());
     result.fold(
           (exception) => showSnackBar(exception),
