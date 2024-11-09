@@ -9,34 +9,47 @@ import '../controllers/login_controller.dart';
 class LoginPage extends GetView<LoginController> {
   const LoginPage({super.key});
 
+  double pageWidth(BuildContext context) => MediaQuery.sizeOf(context).width;
+
+  double responsiveWidth(BuildContext context) {
+    if (pageWidth(context) > 700) {
+      return 700;
+    }
+    return double.infinity;
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _appBar(),
-        body:  _body(),
+        body: Center(
+          child: SizedBox(
+            width: responsiveWidth(context),
+            child: _body(),
+          ),
+        ),
       );
 
   AppBar _appBar() {
     return AppBar(
-        title: Text(LocaleKeys.localization_app_login.tr),
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.deepPurple,
-        actions: [
-          TextButton(
+      title: Text(LocaleKeys.localization_app_login.tr),
+      foregroundColor: Colors.white,
+      backgroundColor: Colors.deepPurple,
+      actions: [
+        TextButton(
             onPressed: () => Get.updateLocale(const Locale('en', 'US')),
             child: Text(
               LocaleKeys.localization_app_change_language_to_english.tr,
               style: const TextStyle(color: Colors.white),
-            )
+            )),
+        TextButton(
+          onPressed: () => Get.updateLocale(const Locale('fa', 'IR')),
+          child: Text(
+            LocaleKeys.localization_app_change_language_to_persian.tr,
+            style: const TextStyle(color: Colors.white),
           ),
-          TextButton(
-              onPressed: () => Get.updateLocale(const Locale('fa', 'IR')),
-              child: Text(
-                  LocaleKeys.localization_app_change_language_to_persian.tr,
-                  style: const TextStyle(color: Colors.white)
-              )
-          ),
-        ],
-      );
+        ),
+      ],
+    );
   }
 
   Widget _body() {
@@ -74,23 +87,23 @@ class LoginPage extends GetView<LoginController> {
         ),
         verticalGap(),
         Obx(
-          ()=> TextField(
-              textInputAction: TextInputAction.next,
-              controller: controller.password,
-              obscureText: !controller.visible.value,
-              decoration: InputDecoration(
-                labelText: LocaleKeys.localization_app_password.tr,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                suffixIcon:InkWell(
-                  onTap:  controller.toggleVisibility,
-                  child: controller.visible.value
-                      ? const Icon(Icons.visibility)
-                      : const Icon(Icons.visibility_off),
-                ),
+          () => TextField(
+            textInputAction: TextInputAction.next,
+            controller: controller.password,
+            obscureText: !controller.visible.value,
+            decoration: InputDecoration(
+              labelText: LocaleKeys.localization_app_password.tr,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              suffixIcon: InkWell(
+                onTap: controller.toggleVisibility,
+                child: controller.visible.value
+                    ? const Icon(Icons.visibility)
+                    : const Icon(Icons.visibility_off),
               ),
             ),
+          ),
         ),
 
         verticalGap(),

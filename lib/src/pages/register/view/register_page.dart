@@ -8,6 +8,15 @@ import '/generated/locales.g.dart';
 class RegisterPage extends GetView<RegisterController> {
   const RegisterPage({super.key});
 
+  double pageWidth(BuildContext context) => MediaQuery.sizeOf(context).width;
+
+  double responsiveWidth(BuildContext context) {
+    if (pageWidth(context) > 700) {
+      return 700;
+    }
+    return double.infinity;
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -15,7 +24,12 @@ class RegisterPage extends GetView<RegisterController> {
           foregroundColor: Colors.white,
           backgroundColor: Colors.deepPurple,
         ),
-        body: _body(),
+        body: Center(
+          child: SizedBox(
+            width: responsiveWidth(context),
+            child: _body(),
+          ),
+        ),
       );
 
   Widget _body() {
@@ -48,7 +62,7 @@ class RegisterPage extends GetView<RegisterController> {
         TextField(
           controller: controller.firstName,
           decoration: InputDecoration(
-            labelText:  LocaleKeys.localization_app_first_name.tr,
+            labelText: LocaleKeys.localization_app_first_name.tr,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -79,34 +93,32 @@ class RegisterPage extends GetView<RegisterController> {
           controller: controller.password,
           obscureText: !controller.visible.value,
           decoration: InputDecoration(
-            labelText: LocaleKeys.localization_app_password.tr,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-              suffixIcon:InkWell(
-                onTap:  controller.toggleVisibility,
+              labelText: LocaleKeys.localization_app_password.tr,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              suffixIcon: InkWell(
+                onTap: controller.toggleVisibility,
                 child: controller.visible.value
                     ? const Icon(Icons.visibility)
                     : const Icon(Icons.visibility_off),
-              )
-          ),
+              )),
         ),
         verticalGap(),
         TextField(
           controller: controller.confirmPass,
           obscureText: !controller.visible.value,
           decoration: InputDecoration(
-            labelText: LocaleKeys.localization_app_confirm_password.tr,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-              suffixIcon:InkWell(
-                onTap:  controller.toggleVisibility,
+              labelText: LocaleKeys.localization_app_confirm_password.tr,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              suffixIcon: InkWell(
+                onTap: controller.toggleVisibility,
                 child: controller.visible.value
                     ? const Icon(Icons.visibility)
                     : const Icon(Icons.visibility_off),
-              )
-          ),
+              )),
         ),
         verticalGap(),
         _genderRadio(),
