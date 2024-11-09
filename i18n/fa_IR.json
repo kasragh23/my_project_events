@@ -1,0 +1,18 @@
+{
+  "localization_app": {
+    "account_credentials": "مشخصات حساب کاربری",
+    "change_language_to_english": "انگلیسی",
+    "change_language_to_persian": "فارسی",
+    "confirm_password": "تایید رمز عبور",
+    "create_one": "یکی بسازید",
+    "dont_have_acc": "حساب ندارید؟",
+    "first_name": "نام",
+    "last_name": "نام خانوادگی",
+    "login": "ورود",
+    "login_credentials": "مشخصات ورود",
+    "password": "رمز عبور",
+    "register": "ثبت نام",
+    "remember_me": "مرا بخاطر بسپار",
+    "username": "نام کاربری"
+  }
+}

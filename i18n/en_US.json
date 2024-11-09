@@ -1,0 +1,18 @@
+{
+  "localization_app": {
+    "account_credentials": "Account Credentials",
+    "change_language_to_english": "EN",
+    "change_language_to_persian": "FA",
+    "confirm_password": "Confirm password",
+    "create_one": "Create one.",
+    "dont_have_acc": "Don't have account?",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "login": "login",
+    "login_credentials": "Login Credentials",
+    "password": "password",
+    "register": "register",
+    "remember_me": "Remember me",
+    "username": "username"
+  }
+}
