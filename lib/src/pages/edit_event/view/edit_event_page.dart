@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_project/generated/locales.g.dart';
 import '../controllers/edit_event_controller.dart';
 
 import '../../../infrastructure/utils/utils.dart';
@@ -22,9 +23,24 @@ class EditEventPage extends GetView<EditEventController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Event'),
+        title: Text(LocaleKeys.localization_app_edit_event.tr),
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
+        actions: [
+          TextButton(
+              onPressed: () => Get.updateLocale(const Locale('en', 'US')),
+              child: Text(
+                LocaleKeys.localization_app_change_language_to_english.tr,
+                style: const TextStyle(color: Colors.white),
+              )),
+          TextButton(
+            onPressed: () => Get.updateLocale(const Locale('fa', 'IR')),
+            child: Text(
+              LocaleKeys.localization_app_change_language_to_persian.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Obx(() {
@@ -34,7 +50,7 @@ class EditEventPage extends GetView<EditEventController> {
             return Center(
               child: ElevatedButton(
                 onPressed: () => controller.getEventById(id: controller.id!),
-                child: const Text('Retry'),
+                child: Text(LocaleKeys.localization_app_retry.tr),
               ),
             );
           } else {
@@ -49,25 +65,29 @@ class EditEventPage extends GetView<EditEventController> {
                       children: [
                         TextFormField(
                           controller: controller.editTitle,
-                          decoration: const InputDecoration(labelText: 'Title'),
+                          decoration: InputDecoration(
+                              labelText: LocaleKeys.localization_app_title.tr),
                           validator: controller.validator,
                         ),
                         TextFormField(
                           controller: controller.editDescription,
-                          decoration:
-                              const InputDecoration(labelText: 'Description'),
+                          decoration: InputDecoration(
+                              labelText:
+                                  LocaleKeys.localization_app_description.tr),
                           validator: controller.validator,
                         ),
                         TextFormField(
                           controller: controller.editPrice,
-                          decoration: const InputDecoration(labelText: 'Price'),
+                          decoration: InputDecoration(
+                              labelText: LocaleKeys.localization_app_price.tr),
                           keyboardType: TextInputType.number,
                           validator: controller.validator,
                         ),
                         TextFormField(
                           controller: controller.editCapacity,
-                          decoration:
-                              const InputDecoration(labelText: 'Capacity'),
+                          decoration: InputDecoration(
+                              labelText:
+                                  LocaleKeys.localization_app_capacity.tr),
                           keyboardType: TextInputType.number,
                           validator: controller.validator,
                         ),
@@ -79,13 +99,15 @@ class EditEventPage extends GetView<EditEventController> {
                         ),
                         ElevatedButton(
                           onPressed: controller.pickImage,
-                          child: const Text('Pick Image'),
+                          child:
+                              Text(LocaleKeys.localization_app_pick_image.tr),
                         ),
                         const SizedBox(height: 16),
                         Row(
                           children: [
                             Obx(() => DropdownButton<int>(
-                                  hint: const Text('Select Year'),
+                                  hint:
+                                      Text(LocaleKeys.localization_app_year.tr),
                                   value: controller.selectedYear.value == 0
                                       ? null
                                       : controller.selectedYear.value,
@@ -103,7 +125,8 @@ class EditEventPage extends GetView<EditEventController> {
                             smallHorizontal(),
                             // Month Dropdown
                             Obx(() => DropdownButton<int>(
-                                  hint: const Text('Select Month'),
+                                  hint: Text(
+                                      LocaleKeys.localization_app_month.tr),
                                   value: controller.selectedMonth.value == 0
                                       ? null
                                       : controller.selectedMonth.value,
@@ -122,7 +145,8 @@ class EditEventPage extends GetView<EditEventController> {
                             smallHorizontal(),
                             // Day Dropdown
                             Obx(() => DropdownButton<int>(
-                                  hint: const Text('Select Day'),
+                                  hint:
+                                      Text(LocaleKeys.localization_app_day.tr),
                                   value: controller.selectedDay.value == 0
                                       ? null
                                       : controller.selectedDay.value,
@@ -144,7 +168,8 @@ class EditEventPage extends GetView<EditEventController> {
                         Row(
                           children: [
                             Obx(() => DropdownButton<int>(
-                                  hint: const Text('Select Hour'),
+                                  hint:
+                                      Text(LocaleKeys.localization_app_hour.tr),
                                   value: controller.selectedHour.value == 0
                                       ? null
                                       : controller.selectedHour.value,
@@ -164,7 +189,8 @@ class EditEventPage extends GetView<EditEventController> {
                             // Minute Dropdown
                             Obx(
                               () => DropdownButton<int>(
-                                hint: const Text('Select Minute'),
+                                hint:
+                                    Text(LocaleKeys.localization_app_minute.tr),
                                 value: controller.selectedMinute.value == 0
                                     ? null
                                     : controller.selectedMinute.value,
@@ -185,7 +211,8 @@ class EditEventPage extends GetView<EditEventController> {
                         verticalGap(),
                         ElevatedButton(
                           onPressed: controller.editEvent,
-                          child: const Text('Save Changes'),
+                          child:
+                              Text(LocaleKeys.localization_app_save_changes.tr),
                         ),
                       ],
                     ),

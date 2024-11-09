@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_project/src/infrastructure/utils/utils.dart';
-import 'package:my_project/src/pages/event_details/models/event_detail_dto.dart';
-import 'package:my_project/src/pages/event_details/models/event_details_model.dart';
-import 'package:my_project/src/pages/event_details/repositories/event_details_repository.dart';
+import '../../../infrastructure/utils/utils.dart';
+import '../models/event_detail_dto.dart';
+import '../models/event_details_model.dart';
+import '../repositories/event_details_repository.dart';
 
 class EventDetailsController extends GetxController {
   Rxn<EventDetailsModel> eventDetail = Rxn<EventDetailsModel>();
@@ -52,7 +51,7 @@ class EventDetailsController extends GetxController {
     int newAttendance =
         initialAttendance.value + eventDetail.value!.attendance!;
     EventDetailDto dto = EventDetailDto(attendance: newAttendance);
-    final result = await _repository.updateEventAttendance(id!, dto);
+    final result = await _repository.updateEventAttendance(id, dto);
 
     result.fold(
       (exception) {
@@ -60,7 +59,6 @@ class EventDetailsController extends GetxController {
       },
       (success) {
         Get.back(result: success);
-        showSnackBar('success');
       },
     );
   }

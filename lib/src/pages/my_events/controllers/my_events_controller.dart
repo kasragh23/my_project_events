@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_project/src/infrastructure/utils/utils.dart';
+import '../../../infrastructure/utils/utils.dart';
 
 import '../../../../my_project.dart';
 import '../model/my_events_model.dart';

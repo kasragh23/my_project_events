@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_project/generated/locales.g.dart';
 import 'package:my_project/src/infrastructure/utils/utils.dart';
 import 'package:my_project/src/pages/event_details/controllers/event_details_controller.dart';
 import 'package:my_project/src/pages/event_details/models/event_details_model.dart';
@@ -14,9 +15,24 @@ class EventDetailsPage extends GetView<EventDetailsController> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Event Details'),
+          title: Text(LocaleKeys.localization_app_event_details.tr),
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
+          actions: [
+            TextButton(
+                onPressed: () => Get.updateLocale(const Locale('en', 'US')),
+                child: Text(
+                  LocaleKeys.localization_app_change_language_to_english.tr,
+                  style: const TextStyle(color: Colors.white),
+                )),
+            TextButton(
+              onPressed: () => Get.updateLocale(const Locale('fa', 'IR')),
+              child: Text(
+                LocaleKeys.localization_app_change_language_to_persian.tr,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         ),
         body: Obx(() {
           if (controller.isLoading.value) {
@@ -27,16 +43,14 @@ class EventDetailsPage extends GetView<EventDetailsController> {
             return _retry();
           }
           return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: _event(event!)
-          );
+              scrollDirection: Axis.vertical, child: _event(event!));
         }),
       );
 
   Widget _retry() => Center(
         child: ElevatedButton(
           onPressed: () => controller.getEventById,
-          child: const Text('retry'),
+          child: Text(LocaleKeys.localization_app_retry.tr),
         ),
       );
 
@@ -56,7 +70,7 @@ class EventDetailsPage extends GetView<EventDetailsController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Event Details'),
+                Text(LocaleKeys.localization_app_event_details.tr),
                 verticalGap(),
                 if (event.poster != null)
                   SizedBox(
@@ -73,26 +87,28 @@ class EventDetailsPage extends GetView<EventDetailsController> {
                 verticalGap(),
                 Text(event.description),
                 verticalGap(),
-                Text('Date: ${event.date ?? "No date available"}'),
+                Text('${LocaleKeys.localization_app_date.tr}:${event.date}'),
                 verticalGap(),
-                Text('Capacity: ${event.capacity}'),
-                controller.isFilled.value?
-                    const SizedBox()
-                    :
-                CapacityCounter(
-                  totalCapacity: event.capacity - event.attendance!,
-                  initialValue: 1,
-                  onChanged: controller.onChanged,
-                )
-                ,
+                Text(
+                    '${LocaleKeys.localization_app_capacity.tr}: ${event.capacity}'),
+                controller.isFilled.value
+                    ? const SizedBox()
+                    : CapacityCounter(
+                        totalCapacity: event.capacity - event.attendance!,
+                        initialValue: 1,
+                        onChanged: controller.onChanged,
+                      ),
                 verticalGap(),
-                Text('Attendance: ${event.attendance ?? 0}'),
+                Text(
+                    '${LocaleKeys.localization_app_attendance.tr}: ${event.attendance ?? 0}'),
                 verticalGap(),
-                Text('Price: ${event.price}\$'),
+                Text('${LocaleKeys.localization_app_price}: ${event.price}\$'),
                 verticalGap(),
                 ElevatedButton(
-                  onPressed: controller.isFilled.value? null :controller.increaseAttendance,
-                  child: const Text('Purchase'),
+                  onPressed: controller.isFilled.value
+                      ? null
+                      : controller.increaseAttendance,
+                  child: Text(LocaleKeys.localization_app_purchase.tr),
                 ),
               ],
             ),

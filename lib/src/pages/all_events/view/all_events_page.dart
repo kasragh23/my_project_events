@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_project/src/infrastructure/utils/utils.dart';
-import 'package:my_project/src/pages/all_events/controllers/all_events_controller.dart';
-import 'package:my_project/src/pages/all_events/view/Widgets/all_events_widgets.dart';
+import '../../../../generated/locales.g.dart';
+import '../../../infrastructure/utils/utils.dart';
+import '../controllers/all_events_controller.dart';
+import 'Widgets/all_events_widgets.dart';
 
 class AllEventsPage extends GetView<AllEventsController> {
   const AllEventsPage({super.key});
@@ -20,19 +21,42 @@ class AllEventsPage extends GetView<AllEventsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('All Eventssss'),
+        title: Text(LocaleKeys.localization_app_all_events.tr),
         foregroundColor: Colors.white,
         backgroundColor: Colors.deepPurple,
+        actions: [
+          TextButton(
+              onPressed: () => Get.updateLocale(const Locale('en', 'US')),
+              child: Text(
+                LocaleKeys.localization_app_change_language_to_english.tr,
+                style: const TextStyle(color: Colors.white),
+              )),
+          TextButton(
+            onPressed: () => Get.updateLocale(const Locale('fa', 'IR')),
+            child: Text(
+              LocaleKeys.localization_app_change_language_to_persian.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
       drawer: Drawer(
         backgroundColor: Colors.deepPurple,
         width: 250,
         child: Column(
-          children: [ListTile(
-            leading: const Icon(Icons.bookmarks,color: Colors.white,),
-            onTap: controller.goToBookmarks,
-            title: const Text('My Bookmarks',style: TextStyle(color: Colors.white),),
-          )],
+          children: [
+            ListTile(
+              leading: const Icon(
+                Icons.bookmarks,
+                color: Colors.white,
+              ),
+              onTap: controller.goToBookmarks,
+              title: Text(
+                LocaleKeys.localization_app_my_bookmarks.tr,
+                style: const TextStyle(color: Colors.white),
+              ),
+            )
+          ],
         ),
       ),
       body: Center(
@@ -51,8 +75,9 @@ class AllEventsPage extends GetView<AllEventsController> {
 
                       // Update search query
                       decoration: InputDecoration(
-                      isDense: true,
-                          hintText: 'Search events...',
+                          isDense: true,
+                          hintText:
+                              LocaleKeys.localization_app_search_events.tr,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -68,35 +93,35 @@ class AllEventsPage extends GetView<AllEventsController> {
                     ),
                   ),
                   Expanded(
-                      child: controller.searchingMode.value
-                          ? ListView.separated(
-                              separatorBuilder: (context, index) =>
-                                  verticalGap(),
-                              itemCount: controller.filteredEvents.length,
-                              itemBuilder: (context, index) {
-                                final event = controller.filteredEvents[index];
-                                return AllEventsWidgets(
-                                    event: event,
-                                    bookmarks: controller.bookmarks,
-                                    onToggle: () =>
-                                        controller.toggleBookmark(event.id),
-                                    onPressed: () =>
-                                        controller.goToEventDetails(event.id));
-                              })
-                          : ListView.separated(
-                              separatorBuilder: (context, index) =>
-                                  verticalGap(),
-                              itemCount: controller.allEvents.length,
-                              itemBuilder: (context, index) {
-                                final event = controller.allEvents[index];
-                                return AllEventsWidgets(
-                                    event: event,
-                                    bookmarks: controller.bookmarks,
-                                    onToggle: () =>
-                                        controller.toggleBookmark(event.id),
-                                    onPressed: () =>
-                                        controller.goToEventDetails(event.id));
-                              })),
+                    child: controller.searchingMode.value
+                        ? ListView.separated(
+                            separatorBuilder: (context, index) => verticalGap(),
+                            itemCount: controller.filteredEvents.length,
+                            itemBuilder: (context, index) {
+                              final event = controller.filteredEvents[index];
+                              return AllEventsWidgets(
+                                  event: event,
+                                  bookmarks: controller.bookmarks,
+                                  onToggle: () =>
+                                      controller.toggleBookmark(event.id),
+                                  onPressed: () =>
+                                      controller.goToEventDetails(event.id));
+                            })
+                        : ListView.separated(
+                            separatorBuilder: (context, index) => verticalGap(),
+                            itemCount: controller.allEvents.length,
+                            itemBuilder: (context, index) {
+                              final event = controller.allEvents[index];
+                              return AllEventsWidgets(
+                                  event: event,
+                                  bookmarks: controller.bookmarks,
+                                  onToggle: () =>
+                                      controller.toggleBookmark(event.id),
+                                  onPressed: () =>
+                                      controller.goToEventDetails(event.id));
+                            },
+                          ),
+                  ),
                 ],
               ),
             ),

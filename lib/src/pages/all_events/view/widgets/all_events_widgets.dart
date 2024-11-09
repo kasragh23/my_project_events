@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_project/generated/locales.g.dart';
 import '../../model/all_events_model.dart';
 
 import '../../../../infrastructure/utils/utils.dart';
@@ -110,7 +111,7 @@ class AllEventsWidgets extends StatelessWidget {
               ),
               TextButton(
                 onPressed: onPressed,
-                child: const Text('Purchase'),
+                child: Text(LocaleKeys.localization_app_purchase.tr),
               ),
             ],
           ),

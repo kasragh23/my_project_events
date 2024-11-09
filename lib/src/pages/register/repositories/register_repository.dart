@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:either_dart/either.dart';
-import '/src/infrastructure/commons/repository_urls.dart';
+import '../../../infrastructure/commons/repository_urls.dart';
 import '../model/register_dto.dart';
 import 'package:http/http.dart' as http;
 

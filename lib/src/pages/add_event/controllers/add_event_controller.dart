@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:my_project/src/pages/add_event/model/add_event_dto.dart';
+import '../model/add_event_dto.dart';
 
 
 import '../repositories/add_event_repository.dart';

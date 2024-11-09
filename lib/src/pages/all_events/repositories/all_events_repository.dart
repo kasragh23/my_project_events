@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:either_dart/either.dart';
-import 'package:my_project/src/infrastructure/commons/repository_urls.dart';
-import 'package:my_project/src/pages/all_events/model/all_events_model.dart';
+import '../../../infrastructure/commons/repository_urls.dart';
+import '../model/all_events_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_project/src/pages/all_events/model/bookmarks_dto.dart';
+import '../model/bookmarks_dto.dart';
 
 class AllEventsRepository {
   Future<Either<String, List<AllEventsModel>>> getAllEvents() async {

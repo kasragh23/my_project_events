@@ -1,4 +1,4 @@
-import 'package:my_project/src/infrastructure/routes/route_paths.dart';
+import 'route_paths.dart';
 
 class RouteNames {
   static const String splash = RoutePaths.splash;

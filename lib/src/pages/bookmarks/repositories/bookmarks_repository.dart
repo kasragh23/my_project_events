@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:either_dart/either.dart';
 import 'package:http/http.dart' as http;
-import 'package:my_project/src/pages/bookmarks/models/bookmark_events_model.dart';
+import '../models/bookmark_events_model.dart';
 import '../../../infrastructure/commons/repository_urls.dart';
 import '../models/bookmarks_dto.dart';
 

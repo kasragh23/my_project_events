@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_project/src/infrastructure/utils/utils.dart';
+import '../../../../generated/locales.g.dart';
+import '../../../infrastructure/utils/utils.dart';
 import '../controllers/my_events_controller.dart';
 
 class MyEventsPage extends GetView<MyEventsController> {
@@ -24,9 +25,24 @@ class MyEventsPage extends GetView<MyEventsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Eventssss'),
+        title: Text(LocaleKeys.localization_app_my_events.tr),
         foregroundColor: Colors.white,
         backgroundColor: Colors.deepPurple,
+        actions: [
+          TextButton(
+              onPressed: () => Get.updateLocale(const Locale('en', 'US')),
+              child: Text(
+                LocaleKeys.localization_app_change_language_to_english.tr,
+                style: const TextStyle(color: Colors.white),
+              )),
+          TextButton(
+            onPressed: () => Get.updateLocale(const Locale('fa', 'IR')),
+            child: Text(
+              LocaleKeys.localization_app_change_language_to_persian.tr,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
       body: Center(
         child: Obx(
@@ -40,7 +56,7 @@ class MyEventsPage extends GetView<MyEventsController> {
                 itemBuilder: (context, index) {
                   final event = controller.myEvents[index];
                   String date =
-                  "${event.date?.year}-${event.date!.month}-${event.date!.day}";
+                      "${event.date?.year}-${event.date!.month}-${event.date!.day}";
 
                   String time = "${event.date!.hour}:${event.date!.minute}";
                   return Container(
@@ -51,10 +67,10 @@ class MyEventsPage extends GetView<MyEventsController> {
                       color: const Color.fromARGB(255, 255, 254, 245),
                     ),
                     child: Row(
-                      // onTap: () {
-                      //   print(event.id);
-                      //   controller.goToEditEvent(event.id!);
-                      // },
+                        // onTap: () {
+                        //   print(event.id);
+                        //   controller.goToEditEvent(event.id!);
+                        // },
                         children: [
                           if (event.poster!.isNotEmpty)
                             ClipRRect(
@@ -67,7 +83,8 @@ class MyEventsPage extends GetView<MyEventsController> {
                               ),
                             )
                           else
-                            const Icon(Icons.image_not_supported, color: Colors.grey),
+                            const Icon(Icons.image_not_supported,
+                                color: Colors.grey),
                           horizontalGap(),
 
                           // Column 2: Title and Description
@@ -79,7 +96,8 @@ class MyEventsPage extends GetView<MyEventsController> {
                                 Text(
                                   event.title,
                                   style: const TextStyle(
-                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
                                 ),
                                 Text(
                                   event.description,
@@ -100,7 +118,7 @@ class MyEventsPage extends GetView<MyEventsController> {
                                 Text(date),
                                 Text(time),
                                 Text(
-                                    'Capacity: ${event.capacity! - event.attendance!} / ${event.capacity}'),
+                                    '${LocaleKeys.localization_app_capacity.tr}: ${event.capacity! - event.attendance!} / ${event.capacity}'),
                               ],
                             ),
                           ),
@@ -123,12 +141,17 @@ class MyEventsPage extends GetView<MyEventsController> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              IconButton(onPressed: ()=> controller.goToEditEvent(event.id!), icon: const Icon(Icons.edit)),
-                              IconButton(onPressed: ()=> controller.deleteEvent(event.id!), icon: const Icon(Icons.delete))
+                              IconButton(
+                                  onPressed: () =>
+                                      controller.goToEditEvent(event.id!),
+                                  icon: const Icon(Icons.edit)),
+                              IconButton(
+                                  onPressed: () =>
+                                      controller.deleteEvent(event.id!),
+                                  icon: const Icon(Icons.delete))
                             ],
                           ),
-                        ]
-                    ),
+                        ]),
                   );
                 },
               ),

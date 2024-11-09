@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:my_project/src/pages/my_events/controllers/my_events_controller.dart';
+import '../controllers/my_events_controller.dart';
 
 class MyEventsBinding extends Bindings {
   @override

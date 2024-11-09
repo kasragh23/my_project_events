@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_project/generated/locales.g.dart';
 import 'package:my_project/src/infrastructure/utils/utils.dart';
 
 import '../controllers/add_event_controller.dart';
@@ -21,9 +22,24 @@ class AddEventPage extends GetView<AddEventController> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Add Event'),
+          title: Text(LocaleKeys.localization_app_add_event.tr),
           backgroundColor: Colors.deepPurple,
           foregroundColor: Colors.white,
+          actions: [
+            TextButton(
+                onPressed: () => Get.updateLocale(const Locale('en', 'US')),
+                child: Text(
+                  LocaleKeys.localization_app_change_language_to_english.tr,
+                  style: const TextStyle(color: Colors.white),
+                )),
+            TextButton(
+              onPressed: () => Get.updateLocale(const Locale('fa', 'IR')),
+              child: Text(
+                LocaleKeys.localization_app_change_language_to_persian.tr,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -38,13 +54,15 @@ class AddEventPage extends GetView<AddEventController> {
                     children: [
                       TextFormField(
                         controller: controller.title,
-                        decoration: const InputDecoration(labelText: 'Title'),
+                        decoration: InputDecoration(
+                            labelText: LocaleKeys.localization_app_title.tr),
                         validator: controller.validate,
                       ),
                       TextFormField(
                         controller: controller.description,
-                        decoration:
-                            const InputDecoration(labelText: 'Description'),
+                        decoration: InputDecoration(
+                            labelText:
+                                LocaleKeys.localization_app_description.tr),
                         validator: controller.validate,
                       ),
                       const SizedBox(height: 16),
@@ -61,7 +79,7 @@ class AddEventPage extends GetView<AddEventController> {
                       verticalGap(),
                       ElevatedButton(
                         onPressed: controller.pickImage,
-                        child: const Text('Pick Image'),
+                        child: Text(LocaleKeys.localization_app_pick_image.tr),
                       ),
                       const SizedBox(height: 16),
                       // Obx(() => TextField(
@@ -74,7 +92,7 @@ class AddEventPage extends GetView<AddEventController> {
                       Row(
                         children: [
                           Obx(() => DropdownButton<int>(
-                                hint: const Text('Year'),
+                                hint: Text(LocaleKeys.localization_app_year.tr),
                                 value: controller.selectedYear.value == 0
                                     ? null
                                     : controller.selectedYear.value,
@@ -92,7 +110,8 @@ class AddEventPage extends GetView<AddEventController> {
                           horizontalGap(),
                           // Month Dropdown
                           Obx(() => DropdownButton<int>(
-                                hint: const Text('Month'),
+                                hint:
+                                    Text(LocaleKeys.localization_app_month.tr),
                                 value: controller.selectedMonth.value == 0
                                     ? null
                                     : controller.selectedMonth.value,
@@ -111,7 +130,7 @@ class AddEventPage extends GetView<AddEventController> {
                           horizontalGap(),
                           // Day Dropdown
                           Obx(() => DropdownButton<int>(
-                                hint: const Text('Day'),
+                                hint: Text(LocaleKeys.localization_app_day.tr),
                                 value: controller.selectedDay.value == 0
                                     ? null
                                     : controller.selectedDay.value,
@@ -132,7 +151,7 @@ class AddEventPage extends GetView<AddEventController> {
                       // Hour Dropdown
                       Row(children: [
                         Obx(() => DropdownButton<int>(
-                              hint: const Text('Hour'),
+                              hint: Text(LocaleKeys.localization_app_hour.tr),
                               value: controller.selectedHour.value == 0
                                   ? null
                                   : controller.selectedHour.value,
@@ -150,7 +169,7 @@ class AddEventPage extends GetView<AddEventController> {
                         horizontalGap(),
                         // Minute Dropdown
                         Obx(() => DropdownButton<int>(
-                              hint: const Text('Minute'),
+                              hint: Text(LocaleKeys.localization_app_minute.tr),
                               value: controller.selectedMinute.value == 0
                                   ? null
                                   : controller.selectedMinute.value,
@@ -169,21 +188,22 @@ class AddEventPage extends GetView<AddEventController> {
 
                       TextFormField(
                         controller: controller.capacity,
-                        decoration:
-                            const InputDecoration(labelText: 'Capacity'),
+                        decoration: InputDecoration(
+                            labelText: LocaleKeys.localization_app_capacity.tr),
                         keyboardType: TextInputType.number,
                         validator: controller.validate,
                       ),
                       TextFormField(
                         controller: controller.price,
-                        decoration: const InputDecoration(labelText: 'Price'),
+                        decoration: InputDecoration(
+                            labelText: LocaleKeys.localization_app_price.tr),
                         keyboardType: TextInputType.number,
                         validator: controller.validate,
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: controller.addEvent,
-                        child: const Text('Add Event'),
+                        child: Text(LocaleKeys.localization_app_add_event.tr),
                       )
                     ],
                   ),

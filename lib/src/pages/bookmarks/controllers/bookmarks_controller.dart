@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_project/src/pages/bookmarks/models/bookmarks_dto.dart';
+import '../models/bookmarks_dto.dart';
 
 import '../../../infrastructure/routes/route_names.dart';
 import '../../../infrastructure/utils/utils.dart';

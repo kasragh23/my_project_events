@@ -4,8 +4,8 @@ import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:my_project/src/infrastructure/utils/utils.dart';
-import 'package:my_project/src/pages/edit_event/repositories/edit_event_repository.dart';
+import '../../../infrastructure/utils/utils.dart';
+import '../repositories/edit_event_repository.dart';
 import '../models/edit_event_dto.dart';
 
 class EditEventController extends GetxController {

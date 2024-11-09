@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_project/src/infrastructure/routes/route_names.dart';
-import 'package:my_project/src/pages/all_events/model/all_events_model.dart';
-import 'package:my_project/src/pages/all_events/model/bookmarks_dto.dart';
-import 'package:my_project/src/pages/all_events/repositories/all_events_repository.dart';
+import '../../../infrastructure/routes/route_names.dart';
+import '../model/all_events_model.dart';
+import '../model/bookmarks_dto.dart';
+import '../repositories/all_events_repository.dart';
 
 import '../../../infrastructure/utils/utils.dart';
 

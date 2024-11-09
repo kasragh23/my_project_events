@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:either_dart/either.dart';
-import 'package:my_project/src/pages/edit_event/models/edit_event_model.dart';
+import '../models/edit_event_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../infrastructure/commons/repository_urls.dart';

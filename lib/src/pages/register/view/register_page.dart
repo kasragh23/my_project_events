@@ -23,6 +23,21 @@ class RegisterPage extends GetView<RegisterController> {
           title: Text(LocaleKeys.localization_app_register.tr),
           foregroundColor: Colors.white,
           backgroundColor: Colors.deepPurple,
+          actions: [
+            TextButton(
+                onPressed: () => Get.updateLocale(const Locale('en', 'US')),
+                child: Text(
+                  LocaleKeys.localization_app_change_language_to_english.tr,
+                  style: const TextStyle(color: Colors.white),
+                )),
+            TextButton(
+              onPressed: () => Get.updateLocale(const Locale('fa', 'IR')),
+              child: Text(
+                LocaleKeys.localization_app_change_language_to_persian.tr,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         ),
         body: Center(
           child: SizedBox(
@@ -125,7 +140,7 @@ class RegisterPage extends GetView<RegisterController> {
         verticalGap(),
         ElevatedButton(
           onPressed: controller.register,
-          child: const Text('Register'),
+          child: Text(LocaleKeys.localization_app_register.tr),
         )
       ],
     );
@@ -134,19 +149,19 @@ class RegisterPage extends GetView<RegisterController> {
   Widget _genderRadio() {
     return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
       Obx(() => Radio<String>(
-          value: 'Male',
+          value: LocaleKeys.localization_app_male.tr,
           groupValue: controller.selectedGender.value,
           onChanged: (value) {
             controller.selectedGender.value = value!;
           })),
-      const Text('Male'),
+      Text(LocaleKeys.localization_app_male.tr),
       Obx(() => Radio<String>(
-          value: 'Female',
+          value: LocaleKeys.localization_app_female.tr,
           groupValue: controller.selectedGender.value,
           onChanged: (value) {
             controller.selectedGender.value = value!;
           })),
-      const Text('Female'),
+      Text(LocaleKeys.localization_app_female.tr),
       Obx(() => Text(controller.passError.value,
           style: const TextStyle(color: Colors.red)))
     ]);
