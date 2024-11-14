@@ -39,6 +39,9 @@
     "search_events": "Search events",
     "search_bookmarks": "Search bookmarks",
     "retry": "Retry",
-    "event_details": "Event Details"
+    "event_details": "Event Details",
+    "price_range": "Price Range",
+    "sort_by_date": "Sort by Date",
+    "sort_by_available_capacity": "Sort by Available Capacity"
   }
 }

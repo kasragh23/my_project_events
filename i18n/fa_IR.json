@@ -39,6 +39,9 @@
     "search_events": "جستجوی رویدادها",
     "search_bookmarks": "جستجوی نشانک‌ها",
     "retry": "تلاش دوباره",
-    "event_details": "جزئیات رویداد"
+    "event_details": "جزئیات رویداد",
+    "price_range": "بازه قیمت",
+    "sort_by_date": "مرتب سازی بر اساس تاریخ",
+    "sort_by_available_capacity": "مرتب سازی بر اساس ظرفیت موجود"
   }
 }

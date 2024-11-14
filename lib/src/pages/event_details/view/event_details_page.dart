@@ -102,7 +102,7 @@ class EventDetailsPage extends GetView<EventDetailsController> {
                 Text(
                     '${LocaleKeys.localization_app_attendance.tr}: ${event.attendance ?? 0}'),
                 verticalGap(),
-                Text('${LocaleKeys.localization_app_price}: ${event.price}\$'),
+                Text('${LocaleKeys.localization_app_price.tr}: ${event.price}\$'),
                 verticalGap(),
                 ElevatedButton(
                   onPressed: controller.isFilled.value
