@@ -75,8 +75,10 @@ class LoginPage extends GetView<LoginController> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextField(
+        TextFormField(
           textInputAction: TextInputAction.next,
+          validator: controller.validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: controller.username,
           decoration: InputDecoration(
             labelText: LocaleKeys.localization_app_username.tr,
@@ -87,10 +89,12 @@ class LoginPage extends GetView<LoginController> {
         ),
         verticalGap(),
         Obx(
-          () => TextField(
+          () => TextFormField(
             textInputAction: TextInputAction.next,
+            validator: controller.validator,
             controller: controller.password,
             obscureText: !controller.visible.value,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: InputDecoration(
               labelText: LocaleKeys.localization_app_password.tr,
               border: OutlineInputBorder(
@@ -119,9 +123,19 @@ class LoginPage extends GetView<LoginController> {
           ],
         ),
         verticalGap(),
-        ElevatedButton(
-          onPressed: controller.login,
-          child: Text(LocaleKeys.localization_app_login.tr),
+        Obx(
+              () => controller.isLoading.value
+              ? ElevatedButton(
+            onPressed: null,
+            child: Transform.scale(
+              scale: 0.5,
+              child: const CircularProgressIndicator(),
+            ),
+          )
+              : ElevatedButton(
+            onPressed: controller.login,
+            child: Text(LocaleKeys.localization_app_login.tr),
+          ),
         ),
         verticalGap(),
         _createAccount(),

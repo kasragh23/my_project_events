@@ -74,7 +74,10 @@ class RegisterPage extends GetView<RegisterController> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextField(
+        TextFormField(
+          textInputAction: TextInputAction.next,
+          validator: controller.validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: controller.firstName,
           decoration: InputDecoration(
             labelText: LocaleKeys.localization_app_first_name.tr,
@@ -84,7 +87,10 @@ class RegisterPage extends GetView<RegisterController> {
           ),
         ),
         verticalGap(),
-        TextField(
+        TextFormField(
+          textInputAction: TextInputAction.next,
+          validator: controller.validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: controller.lastName,
           decoration: InputDecoration(
             labelText: LocaleKeys.localization_app_last_name.tr,
@@ -94,7 +100,10 @@ class RegisterPage extends GetView<RegisterController> {
           ),
         ),
         verticalGap(),
-        TextField(
+        TextFormField(
+          textInputAction: TextInputAction.next,
+          validator: controller.validator,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: controller.username,
           decoration: InputDecoration(
             labelText: LocaleKeys.localization_app_username.tr,
@@ -104,36 +113,48 @@ class RegisterPage extends GetView<RegisterController> {
           ),
         ),
         verticalGap(),
-        TextField(
-          controller: controller.password,
-          obscureText: !controller.visible.value,
-          decoration: InputDecoration(
+        Obx(
+          () => TextFormField(
+            textInputAction: TextInputAction.next,
+            validator: controller.passValidator,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: controller.password,
+            obscureText: !controller.visible1.value,
+            decoration: InputDecoration(
               labelText: LocaleKeys.localization_app_password.tr,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               suffixIcon: InkWell(
-                onTap: controller.toggleVisibility,
-                child: controller.visible.value
+                onTap: controller.toggleVisibility1,
+                child: controller.visible1.value
                     ? const Icon(Icons.visibility)
                     : const Icon(Icons.visibility_off),
-              )),
+              ),
+            ),
+          ),
         ),
         verticalGap(),
-        TextField(
-          controller: controller.confirmPass,
-          obscureText: !controller.visible.value,
-          decoration: InputDecoration(
+        Obx(
+          () => TextFormField(
+            textInputAction: TextInputAction.next,
+            validator: controller.passValidator,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: controller.confirmPass,
+            obscureText: !controller.visible2.value,
+            decoration: InputDecoration(
               labelText: LocaleKeys.localization_app_confirm_password.tr,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
               suffixIcon: InkWell(
-                onTap: controller.toggleVisibility,
-                child: controller.visible.value
+                onTap: controller.toggleVisibility2,
+                child: controller.visible2.value
                     ? const Icon(Icons.visibility)
                     : const Icon(Icons.visibility_off),
-              )),
+              ),
+            ),
+          ),
         ),
         verticalGap(),
         _genderRadio(),
@@ -147,23 +168,32 @@ class RegisterPage extends GetView<RegisterController> {
   }
 
   Widget _genderRadio() {
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      Obx(() => Radio<String>(
-          value: LocaleKeys.localization_app_male.tr,
-          groupValue: controller.selectedGender.value,
-          onChanged: (value) {
-            controller.selectedGender.value = value!;
-          })),
-      Text(LocaleKeys.localization_app_male.tr),
-      Obx(() => Radio<String>(
-          value: LocaleKeys.localization_app_female.tr,
-          groupValue: controller.selectedGender.value,
-          onChanged: (value) {
-            controller.selectedGender.value = value!;
-          })),
-      Text(LocaleKeys.localization_app_female.tr),
-      Obx(() => Text(controller.passError.value,
-          style: const TextStyle(color: Colors.red)))
-    ]);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Obx(
+          () => Radio<String>(
+              value: LocaleKeys.localization_app_male.tr,
+              groupValue: controller.selectedGender.value,
+              onChanged: (value) {
+                controller.selectedGender.value = value!;
+              }),
+        ),
+        Text(LocaleKeys.localization_app_male.tr),
+        Obx(
+          () => Radio<String>(
+              value: LocaleKeys.localization_app_female.tr,
+              groupValue: controller.selectedGender.value,
+              onChanged: (value) {
+                controller.selectedGender.value = value!;
+              }),
+        ),
+        Text(LocaleKeys.localization_app_female.tr),
+        Obx(
+          () => Text(controller.passError.value,
+              style: const TextStyle(color: Colors.red)),
+        )
+      ],
+    );
   }
 }

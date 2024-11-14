@@ -10,11 +10,11 @@ class LoginController extends GetxController {
   final username = TextEditingController();
   final password = TextEditingController();
   final LoginRepository loginRepository = LoginRepository();
+  RxBool isLoading = false.obs;
   RxBool visible = false.obs;
-
   var rememberMe = false.obs;
 
-  String? validate(String? value) {
+  String? validator(String? value) {
     if (value != null) {
       if (value.isEmpty) return 'Required';
     }
@@ -22,10 +22,14 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
-    if (formKey.currentState?.validate() ?? false) {
+    if (!(formKey.currentState?.validate() ?? false)) {
+      return;
+    }
+    isLoading.value = true;
       try {
         final credentials = await loginRepository.getUserCredentials();
         print(credentials);
+        isLoading.value = false;
         if (credentials.containsKey(username.text)) {
           if (credentials[username.text] == password.text) {
             if (rememberMe.value) {
@@ -62,7 +66,7 @@ class LoginController extends GetxController {
           ),
         );
       }
-    }
+
   }
 
   void toggleVisibility() {

@@ -60,6 +60,10 @@ class LocaleKeys {
   static const localization_app_retry = 'localization_app_retry';
   static const localization_app_event_details =
       'localization_app_event_details';
+  static const localization_app_price_range = 'localization_app_price_range';
+  static const localization_app_sort_by_date = 'localization_app_sort_by_date';
+  static const localization_app_sort_by_available_capacity =
+      'localization_app_sort_by_available_capacity';
 }
 
 class Locales {
@@ -104,6 +108,9 @@ class Locales {
     'localization_app_search_bookmarks': 'Search bookmarks',
     'localization_app_retry': 'Retry',
     'localization_app_event_details': 'Event Details',
+    'localization_app_price_range': 'Price Range',
+    'localization_app_sort_by_date': 'Sort by Date',
+    'localization_app_sort_by_available_capacity': 'Sort by Available Capacity',
   };
   static const fa_IR = {
     'localization_app_account_credentials': 'مشخصات حساب کاربری',
@@ -146,5 +153,9 @@ class Locales {
     'localization_app_search_bookmarks': 'جستجوی نشانک‌ها',
     'localization_app_retry': 'تلاش دوباره',
     'localization_app_event_details': 'جزئیات رویداد',
+    'localization_app_price_range': 'بازه قیمت',
+    'localization_app_sort_by_date': 'مرتب سازی بر اساس تاریخ',
+    'localization_app_sort_by_available_capacity':
+        'مرتب سازی بر اساس ظرفیت موجود',
   };
 }

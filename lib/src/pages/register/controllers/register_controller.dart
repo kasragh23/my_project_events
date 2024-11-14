@@ -14,14 +14,22 @@ class RegisterController extends GetxController {
   final username = TextEditingController();
   final password = TextEditingController();
   final confirmPass = TextEditingController();
-  RxBool visible = false.obs;
+  RxBool visible1 = false.obs;
+  RxBool visible2 = false.obs;
   var isLoading = false.obs;
   var passError = ''.obs;
   var selectedGender = ''.obs;
 
   final RegisterRepository _registerRepository = RegisterRepository();
 
-  String? validate(String? value) {
+  String? validator(String? value) {
+    if (value != null) {
+      if (value.isEmpty) return 'Required';
+    }
+    return null;
+  }
+
+  String? passValidator(String? value) {
     if (value != null) {
       if (value.isEmpty) return 'Required';
       if (value.length < 6) return 'must be more than 6 characters';
@@ -54,7 +62,10 @@ class RegisterController extends GetxController {
     }
   }
 
-  void toggleVisibility(){
-    visible.value = !visible.value;
+  void toggleVisibility1(){
+    visible1.value = !visible1.value;
+  }
+  void toggleVisibility2(){
+    visible2.value = !visible2.value;
   }
 }
