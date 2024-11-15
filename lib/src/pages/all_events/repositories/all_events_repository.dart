@@ -41,6 +41,9 @@ class AllEventsRepository {
       statusCode = response.statusCode;
       if (statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
+        if(jsonData.isEmpty){
+          return Right({'bookmakrs': [], 'bookmarkId': null});
+        }
         final Map<String, dynamic> result = jsonData[0];
         for(var bookmark in result['bookedEvents']){
           bookmarks.add(bookmark);
@@ -54,6 +57,28 @@ class AllEventsRepository {
       return Left('Something went wrong $e -> status code: $statusCode');
     }
   }
+
+  Future<Either<String, bool>> createBookmark(BookmarksDto dto) async {
+    int? statusCode;
+    try {
+      final Uri url = RepositoryUrls.createBookmark;
+      final http.Response response = await http.post(
+        url,
+        body: json.encode(dto.toJson()),
+        headers: {'Content-Type': 'application/json'},
+      );
+      statusCode = response.statusCode;
+
+      if (statusCode == 201) { // Check for successful creation status
+        return const Right(true);
+      }
+      return Left('Failed to create bookmark -> status code: $statusCode');
+    } catch (e) {
+      return Left('Something went wrong: $e -> status code: $statusCode');
+    }
+  }
+
+
 
   Future<Either<String, bool>> removeBookmark(int bookmarkId, BookmarksDto dto) async {
     int? statusCode;

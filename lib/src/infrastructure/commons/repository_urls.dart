@@ -14,6 +14,8 @@ class RepositoryUrls {
 
   static Uri addEvent = Uri.http(_baseUrl, _allEvents);
 
+  static Uri createBookmark = Uri.http(_baseUrl, _bookmarks);
+
   static Uri getBookmarksByUserId(userId) => Uri.parse('http://$_baseUrl$_bookmarks?userId=$userId');
 
   static Uri getBookedEvents(String param) => Uri.parse('http://$_baseUrl$_allEvents?$param');

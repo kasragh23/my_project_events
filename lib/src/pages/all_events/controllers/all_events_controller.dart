@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../infrastructure/routes/route_names.dart';
@@ -17,8 +19,14 @@ class AllEventsController extends GetxController {
   RxBool searchingMode = false.obs;
   final searchController = TextEditingController();
   int? bookmarkId;
-
+  RxInt minPrice = 0.obs;
+  RxInt maxPrice = 1000.obs;
+  RxInt selectedMinPrice = 0.obs;
+  RxInt selectedMaxPrice = 1000.obs;
   final int userId;
+  RxBool sortByDateAscending = false.obs;
+  RxBool sortByCapacityAscending = false.obs;
+  RxBool isLoading = true.obs, isRetryMode = false.obs;
 
   AllEventsController({required this.userId});
 
@@ -32,30 +40,79 @@ class AllEventsController extends GetxController {
     final resultOrException = await _repository.getAllEvents();
     resultOrException.fold(
       (exception) {
+        isRetryMode.value = true;
+        isLoading.value = false;
         return showSnackBar(exception);
       },
       (event) async {
-        await getBookmarks();
+        if(bookmarks.isNotEmpty) {
+          await getBookmarks();
+        } else{
         allEvents.value = event;
-        filteredEvents.addAll(event); // Initially, show all events
-      },
+        filteredEvents.addAll(event);
+        // Initially, show all events
+        setMinMaxPrice();
+        isLoading.value = false;
+
+        }},
     );
   }
 
   void filterEvents() {
     searchingMode.value = true;
-    print(searchingMode);
     searchQuery.value = searchController.text;
-    filteredEvents.value = allEvents
+    List<AllEventsModel> tempList = allEvents
         .where((event) =>
             event.title.toLowerCase().contains(searchQuery.value.toLowerCase()))
         .toList();
+    tempList = tempList
+        .where((event) =>
+            event.price >= selectedMinPrice.value &&
+            event.price <= selectedMaxPrice.value)
+        .toList();
+
+    tempList.sort((a, b) => sortByDateAscending.value
+        ? a.date!.compareTo(b.date!)
+        : b.date!.compareTo(a.date!));
+
+    //
+    // tempList.sort((a, b) => sortByCapacityAscending.value
+    //     ? (b.capacity - b.attendance!).compareTo(a.capacity - a.attendance!)
+    //     : (a.capacity - a.attendance!).compareTo(b.capacity - b.attendance!));
+
+    filteredEvents.value = tempList;
   }
 
-  void clearSearch(){
+  void clearSearch() {
     searchController.clear();
     searchQuery.value = '';
     searchingMode.value = false;
+  }
+
+  void setMinMaxPrice() {
+    if (allEvents.isNotEmpty) {
+      minPrice.value = allEvents.map((event) => event.price).reduce(min);
+      maxPrice.value = allEvents.map((event) => event.price).reduce(max);
+      selectedMinPrice.value = minPrice.value;
+      selectedMaxPrice.value = maxPrice.value;
+      filterEvents();
+    }
+  }
+
+  void onPriceRangeChanged(RangeValues values) {
+    minPrice.value = values.start.toInt();
+    maxPrice.value = values.end.toInt();
+    filterEvents();
+  }
+
+  void onSortOrderChangedByCapacity(bool ascending) {
+    sortByCapacityAscending.value = ascending;
+    filterEvents();
+  }
+
+  void onSortOrderChanged(bool ascending) {
+    sortByDateAscending.value = ascending;
+    filterEvents();
   }
 
   Future<void> getBookmarks() async {
@@ -72,30 +129,47 @@ class AllEventsController extends GetxController {
   }
 
   Future<void> toggleBookmark(int eventId) async {
-    if (bookmarks.contains(eventId)) {
-      final List newBookedEvent = bookmarks;
-      newBookedEvent.remove(eventId);
-      final BookmarksDto dto =
-          BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
-      final result = await _repository.removeBookmark(bookmarkId!, dto);
+    if (bookmarkId == null) {
+      // No bookmark entry exists; create one
+      final List newBookedEvent = [eventId];
+      final BookmarksDto dto = BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
+
+      final result = await _repository.createBookmark(dto);
       result.fold(
-        (exception) => showSnackBar(exception),
-        (_) {
-          getBookmarks();
+            (exception) => showSnackBar(exception),
+            (_) {
+          getBookmarks(); // Reload bookmarks after creation
         },
       );
     } else {
-      final List newBookedEvent = bookmarks;
-      newBookedEvent.add(eventId);
-      final BookmarksDto dto =
-          BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
-      final result = await _repository.addBookmark(bookmarkId!, dto);
-      result.fold(
-        (exception) => showSnackBar(exception),
-        (_) {
-          getBookmarks();
-        },
-      );
+      // Bookmark entry exists; toggle normally
+      if (bookmarks.contains(eventId)) {
+        // Remove bookmark
+        final List newBookedEvent = bookmarks;
+        newBookedEvent.remove(eventId);
+        final BookmarksDto dto = BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
+
+        final result = await _repository.removeBookmark(bookmarkId!, dto);
+        result.fold(
+              (exception) => showSnackBar(exception),
+              (_) {
+            getBookmarks();
+          },
+        );
+      } else {
+        // Add bookmark
+        final List newBookedEvent = bookmarks;
+        newBookedEvent.add(eventId);
+        final BookmarksDto dto = BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
+
+        final result = await _repository.addBookmark(bookmarkId!, dto);
+        result.fold(
+              (exception) => showSnackBar(exception),
+              (_) {
+            getBookmarks();
+          },
+        );
+      }
     }
   }
 
@@ -117,7 +191,7 @@ class AllEventsController extends GetxController {
   Future<void> goToBookmarks() async {
     final result = await Get.toNamed(RouteNames.bookmarks,
         parameters: {'userId': userId.toString()}, arguments: bookmarks);
-    if(result != null){
+    if (result != null) {
       getAllEvents();
     }
   }

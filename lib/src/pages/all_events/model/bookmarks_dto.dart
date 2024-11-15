@@ -1,7 +1,7 @@
 class BookmarksDto {
   int? id;
   final int userId;
-  final List bookedEvents;
+  List? bookedEvents;
 
   BookmarksDto({
     this.id,
