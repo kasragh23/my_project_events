@@ -72,12 +72,13 @@ class EventDetailsPage extends GetView<EventDetailsController> {
               children: [
                 Text(LocaleKeys.localization_app_event_details.tr),
                 verticalGap(),
-                if (event.poster != null)
+                event.poster!.isNotEmpty ?
                   SizedBox(
                     width: 200,
                     height: 200,
                     child: Image.memory(base64Decode(event.poster!)),
-                  ),
+                  ) :
+                    const ClipOval(child: Icon(Icons.image_not_supported)),
                 verticalGap(),
                 Text(
                   event.title,
