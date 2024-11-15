@@ -16,7 +16,7 @@ class EditEventController extends GetxController {
   final editPrice = TextEditingController();
   final editCapacity = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  RxBool isRetryMode = false.obs, isLoading = true.obs, isEditing = false.obs;
+  RxBool isRetryMode = false.obs, isLoading = true.obs;
   var selectedYear = 0.obs;
   var selectedMonth = 0.obs;
   var selectedDay = 0.obs;
