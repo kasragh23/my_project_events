@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../model/add_event_dto.dart';
-
 
 import '../repositories/add_event_repository.dart';
 
@@ -12,20 +12,19 @@ class AddEventController extends GetxController {
   final int? userId;
 
   AddEventController({required this.userId});
-
   final formKey = GlobalKey<FormState>();
   final title = TextEditingController();
   final description = TextEditingController();
   final capacity = TextEditingController();
   final price = TextEditingController();
+  final TextInputFormatter _capacityFormatter = FilteringTextInputFormatter.digitsOnly;
+  final TextInputFormatter _priceFormatter = FilteringTextInputFormatter.allow(RegExp('[0-9.,]+'));
   var selectedYear = 0.obs;
   var selectedMonth = 0.obs;
   var selectedDay = 0.obs;
   var selectedHour = 0.obs;
   var selectedMinute = 0.obs;
-  final currentYear = DateTime
-      .now()
-      .year;
+  final currentYear = DateTime.now().year;
 
   List<int> get years =>
       [for (var i = currentYear - 5; i <= currentYear + 5; i++) i];
@@ -50,6 +49,9 @@ class AddEventController extends GetxController {
   var selectedImage = ''.obs;
   var selectedDate = ''.obs;
 
+  List<TextInputFormatter> get capacityFormatters => [_capacityFormatter];
+  List<TextInputFormatter> get priceFormatters => [_priceFormatter];
+
   final ImagePicker _picker = ImagePicker();
 
   void pickImage() async {
@@ -67,55 +69,69 @@ class AddEventController extends GetxController {
   Future<void> addEvent() async {
     if (!(formKey.currentState?.validate() ?? false)) return;
 
-      final int priceValue = int.tryParse(price.text) ?? 0;
-      final int capacityValue = int.parse(capacity.text);
-      final eventDate = DateTime(
-        selectedYear.value, selectedMonth.value, selectedDay.value,
-        selectedHour.value, selectedMinute.value,);
-      if (eventDate.isBefore(DateTime.now())) {
-        Get.showSnackbar(
-          const GetSnackBar(title: 'Error',
-            message: 'Event date must be in the future.',
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 4),
-          ),);
-        return;
-      }
-        final AddEventDto dto = AddEventDto(
-          userId: userId!,
-          title: title.text,
-          description: description.text,
-          poster: selectedImage.value,
-          date: eventDate.toString(),
-          capacity: capacityValue,
-          price: priceValue,
-        );
-        final resultOrException = await _repository.addEvent(dto: dto);
-        resultOrException.fold((exception) {
-          Get.showSnackbar(
-            GetSnackBar(
-              title: 'Failed to add event',
-              message: exception,
-              backgroundColor: Colors.red,
-              duration: const Duration(seconds: 4),
-            ),
-          );
-        }, (event) {
-            Get.back();
-        });
-
+    final int priceValue = int.tryParse(price.text) ?? 0;
+    final int capacityValue = int.parse(capacity.text);
+    final eventDate = DateTime(
+      selectedYear.value,
+      selectedMonth.value,
+      selectedDay.value,
+      selectedHour.value,
+      selectedMinute.value,
+    );
+    if (eventDate.isBefore(DateTime.now())) {
+      Get.showSnackbar(
+        const GetSnackBar(
+          title: 'Error',
+          message: 'Event date must be in the future.',
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 4),
+        ),
+      );
+      return;
     }
-
-    //   void selectDate(BuildContext context) async {
-    //     final DateTime? picked = await showDatePicker(
-    //       context: context,
-    //       initialDate: DateTime.now(),
-    //       firstDate: DateTime(2000),
-    //       lastDate: DateTime(2101),
-    //     );
-    //     if (picked != null && picked != DateTime.now()) {
-    //       selectedDate.value = picked.toLocal().toString().split(' ')[0];
-    //     }
-    //   }
-    // }
+    final AddEventDto dto = AddEventDto(
+      userId: userId!,
+      title: title.text,
+      description: description.text,
+      poster: selectedImage.value,
+      date: eventDate.toString(),
+      capacity: capacityValue,
+      price: priceValue,
+    );
+    final resultOrException = await _repository.addEvent(dto: dto);
+    resultOrException.fold((exception) {
+      Get.showSnackbar(
+        GetSnackBar(
+          title: 'Failed to add event',
+          message: exception,
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 4),
+        ),
+      );
+    }, (event) {
+      Get.back();
+    });
   }
+
+  //   void selectDate(BuildContext context) async {
+  //     final DateTime? picked = await showDatePicker(
+  //       context: context,
+  //       initialDate: DateTime.now(),
+  //       firstDate: DateTime(2000),
+  //       lastDate: DateTime(2101),
+  //     );
+  //     if (picked != null && picked != DateTime.now()) {
+  //       selectedDate.value = picked.toLocal().toString().split(' ')[0];
+  //     }
+  //   }
+  // }
+
+  @override
+  void dispose() {
+    super.dispose();
+    title.dispose();
+    description.dispose();
+    capacity.dispose();
+    price.dispose();
+  }
+}
