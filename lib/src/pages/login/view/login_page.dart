@@ -114,28 +114,43 @@ class LoginPage extends GetView<LoginController> {
         //TODO: I should've implement the 'remember me' checkbox about here
         Row(
           children: [
-            Obx(() => Checkbox(
-                value: controller.rememberMe.value,
-                onChanged: (bool? value) {
-                  controller.rememberMe.value = value!;
-                })),
+            Obx(
+              () => Checkbox(
+                  value: controller.rememberMe.value,
+                  onChanged: (bool? value) {
+                    controller.rememberMe.value = value!;
+                  }),
+            ),
             Text(LocaleKeys.localization_app_remember_me.tr),
           ],
         ),
         verticalGap(),
-        Obx(
-              () => controller.isLoading.value
-              ? ElevatedButton(
-            onPressed: null,
-            child: Transform.scale(
-              scale: 0.5,
-              child: const CircularProgressIndicator(),
+        Row(
+          children: [
+            Obx(
+              () => Checkbox(
+                  value: controller.stayLoggedIn.value,
+                  onChanged: (bool? value) {
+                    controller.stayLoggedIn.value = value!;
+                  }),
             ),
-          )
+            Text(LocaleKeys.localization_app_stay_logged_in.tr),
+          ],
+        ),
+        smallVertical(),
+        Obx(
+          () => controller.isLoading.value
+              ? ElevatedButton(
+                  onPressed: null,
+                  child: Transform.scale(
+                    scale: 0.5,
+                    child: const CircularProgressIndicator(),
+                  ),
+                )
               : ElevatedButton(
-            onPressed: controller.login,
-            child: Text(LocaleKeys.localization_app_login.tr),
-          ),
+                  onPressed: controller.login,
+                  child: Text(LocaleKeys.localization_app_login.tr),
+                ),
         ),
         verticalGap(),
         _createAccount(),

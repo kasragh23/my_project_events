@@ -12,7 +12,15 @@ class LoginController extends GetxController {
   final LoginRepository loginRepository = LoginRepository();
   RxBool isLoading = false.obs;
   RxBool visible = false.obs;
-  var rememberMe = false.obs;
+  RxBool rememberMe = false.obs;
+  RxBool stayLoggedIn = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    loadUserCredentials();
+    checkStayLoggedIn();
+  }
 
   String? validator(String? value) {
     if (value != null) {
@@ -26,47 +34,53 @@ class LoginController extends GetxController {
       return;
     }
     isLoading.value = true;
-      try {
-        final credentials = await loginRepository.getUserCredentials();
-        print(credentials);
-        isLoading.value = false;
-        if (credentials.containsKey(username.text)) {
-          if (credentials[username.text] == password.text) {
-            if (rememberMe.value) {
-              saveUserCredentials();
-            }
-            final userId = await loginRepository.getUserId(username.text);
-            Get.offNamed(RouteNames.allEvents,
-                parameters: {'userId': userId.toString()});
+    try {
+      final credentials = await loginRepository.getUserCredentials();
+      print(credentials);
+      isLoading.value = false;
+      if (credentials.containsKey(username.text)) {
+        if (credentials[username.text] == password.text) {
+          if (stayLoggedIn.value) {
+            saveStayLoggedIn();
           } else {
-            Get.showSnackbar(
-              GetSnackBar(
-                backgroundColor: Colors.red.shade900,
-                title: 'Validation Error',
-                message: 'Incorrect password',
-                duration: const Duration(seconds: 4),
-              ),
-            );
+            clearStayLoggedIn();
           }
+          if (rememberMe.value) {
+            saveUserCredentials();
+          } else {
+            clearUserCredentials();
+          }
+          final userId = await loginRepository.getUserId(username.text);
+          Get.offNamed(RouteNames.allEvents,
+              parameters: {'userId': userId.toString()});
         } else {
           Get.showSnackbar(
             GetSnackBar(
               backgroundColor: Colors.red.shade900,
               title: 'Validation Error',
-              message: 'User not found',
+              message: 'Incorrect password',
               duration: const Duration(seconds: 4),
             ),
           );
         }
-      } catch (error) {
+      } else {
         Get.showSnackbar(
           GetSnackBar(
-            message: 'An error occurred: $error',
-            duration: const Duration(seconds: 3),
+            backgroundColor: Colors.red.shade900,
+            title: 'Validation Error',
+            message: 'User not found',
+            duration: const Duration(seconds: 4),
           ),
         );
       }
-
+    } catch (error) {
+      Get.showSnackbar(
+        GetSnackBar(
+          message: 'An error occurred: $error',
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
   }
 
   void toggleVisibility() {
@@ -83,6 +97,35 @@ class LoginController extends GetxController {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     username.text = preferences.getString('username') ?? '';
     password.text = preferences.getString('password') ?? '';
+  }
+
+  Future<void> saveStayLoggedIn() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool('stayLoggedIn', stayLoggedIn.value);
+  }
+
+  Future<void> checkStayLoggedIn() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    stayLoggedIn.value = preferences.getBool('stayLoggedIn') ?? false;
+    if (stayLoggedIn.value) {
+      username.text = preferences.getString('loggedInUser') ?? '';
+      if (username.text.isNotEmpty) {
+        final userId = await loginRepository.getUserId(username.text);
+        Get.offNamed(RouteNames.allEvents,
+            parameters: {'userId': userId.toString()});
+      }
+    }
+  }
+
+  Future<void> clearUserCredentials() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.remove('username');
+    await preferences.remove('password');
+  }
+
+  Future<void> clearStayLoggedIn() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.remove('stayLoggedIn');
   }
 
   void register() async {
