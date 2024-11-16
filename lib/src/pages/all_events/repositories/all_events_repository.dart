@@ -33,7 +33,7 @@ class AllEventsRepository {
   Future<Either<String, Map>> getBookmarks(int userId) async{
     int? statusCode;
     List bookmarks = [];
-    int? bookmarkId;
+    int bookmarkId;
     try {
       final http.Response response;
       final Uri url = RepositoryUrls.getBookmarksByUserId(userId);
@@ -41,6 +41,7 @@ class AllEventsRepository {
       statusCode = response.statusCode;
       if (statusCode == 200) {
         final List<dynamic> jsonData = json.decode(response.body);
+        print(jsonData);
         if(jsonData.isEmpty){
           return Right({'bookmakrs': [], 'bookmarkId': null});
         }

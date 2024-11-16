@@ -120,6 +120,12 @@ class AllEventsPage extends GetView<AllEventsController> {
                 ],
               ),
             ),
+            const Spacer(),
+            ListTile(
+              title: Text(LocaleKeys.localization_app_logout.tr,style: const TextStyle(color: Colors.white),),
+              leading: const Icon(Icons.logout_outlined,color: Colors.white,),
+              onTap: controller.logout,
+            )
           ],
         ),
       ),

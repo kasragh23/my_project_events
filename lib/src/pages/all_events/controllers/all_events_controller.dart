@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../infrastructure/routes/route_names.dart';
 import '../model/all_events_model.dart';
 import '../model/bookmarks_dto.dart';
@@ -28,7 +29,7 @@ class AllEventsController extends GetxController {
   final int userId;
   RxBool sortByDateAscending = false.obs;
   RxBool sortByCapacityAscending = false.obs;
-  RxBool isLoading = true.obs, isRetryMode = false.obs;
+  RxBool isLoading = false.obs, isRetryMode = false.obs;
 
   AllEventsController({required this.userId});
 
@@ -39,6 +40,7 @@ class AllEventsController extends GetxController {
   }
 
   Future<void> getAllEvents() async {
+    isLoading.value = true;
     final resultOrException = await _repository.getAllEvents();
     resultOrException.fold(
       (exception) {
@@ -47,15 +49,12 @@ class AllEventsController extends GetxController {
         return showSnackBar(exception);
       },
       (event) async {
-        if (bookmarks.isNotEmpty) {
-          await getBookmarks();
-        } else {
           allEvents.value = event;
           filteredEvents.addAll(event);
           // Initially, show all events
           setMinMaxPrice();
+          await getBookmarks();
           isLoading.value = false;
-        }
       },
     );
   }
@@ -133,15 +132,6 @@ class AllEventsController extends GetxController {
     filterEventsByPrice();
   }
 
-  // void onSortOrderChangedByCapacity(bool ascending) {
-  //   sortByCapacityAscending.value = ascending;
-  //   filterEvents();
-  // }
-
-  // void onSortOrderChanged(bool ascending) {
-  //   sortByDateAscending.value = ascending;
-  //   filterEvents();
-  // }
 
   Future<void> getBookmarks() async {
     final resultOrException = await _repository.getBookmarks(userId);
@@ -150,8 +140,13 @@ class AllEventsController extends GetxController {
         return showSnackBar(exception);
       },
       (map) {
+        if(map['bookmarkId']==null){
+          isLoading.value = false;
+          return;
+        }
         bookmarks.value = map['bookmarks'];
         bookmarkId = map['bookmarkId'];
+        print(bookmarkId);
       },
     );
   }
@@ -216,6 +211,7 @@ class AllEventsController extends GetxController {
   Future<void> goToMyEvents() async {
     await Get.toNamed(RouteNames.myEvents,
         parameters: {'userId': userId.toString()});
+    print('when?');
     getAllEvents();
   }
 
@@ -225,5 +221,15 @@ class AllEventsController extends GetxController {
     if (result != null) {
       getAllEvents();
     }
+  }
+
+  Future<void> clearStayLoggedIn() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.remove('stayLoggedIn');
+  }
+
+  void logout() {
+    clearStayLoggedIn();
+    Get.offAllNamed(RouteNames.login);
   }
 }
