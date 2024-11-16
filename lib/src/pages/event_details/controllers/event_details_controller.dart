@@ -6,7 +6,7 @@ import '../repositories/event_details_repository.dart';
 
 class EventDetailsController extends GetxController {
   Rxn<EventDetailsModel> eventDetail = Rxn<EventDetailsModel>();
-  RxBool isRetryMode = false.obs, isLoading = true.obs;
+  RxBool isRetryMode = false.obs, isLoading = false.obs, buttonLoading = false.obs;
 
   final EventDetailsRepository _repository = EventDetailsRepository();
 
@@ -48,6 +48,7 @@ class EventDetailsController extends GetxController {
   }
 
   Future<void> increaseAttendance() async {
+    buttonLoading.value = true;
     int newAttendance =
         initialAttendance.value + eventDetail.value!.attendance!;
     EventDetailDto dto = EventDetailDto(attendance: newAttendance);
@@ -55,10 +56,12 @@ class EventDetailsController extends GetxController {
 
     result.fold(
       (exception) {
+        buttonLoading.value = false;
         showSnackBar(exception);
       },
       (success) {
         Get.back(result: success);
+        buttonLoading.value = false;
       },
     );
   }

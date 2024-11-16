@@ -1,13 +1,13 @@
 import 'dart:convert';
 
+import 'package:capacity_counter/capacity_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_project/generated/locales.g.dart';
-import 'package:my_project/src/infrastructure/utils/utils.dart';
-import 'package:my_project/src/pages/event_details/controllers/event_details_controller.dart';
-import 'package:my_project/src/pages/event_details/models/event_details_model.dart';
+import '../../../../generated/locales.g.dart';
+import '../../../infrastructure/utils/utils.dart';
+import '../controllers/event_details_controller.dart';
+import '../models/event_details_model.dart';
 
-import '../../../components/capacity/capacity_counter.dart';
 
 class EventDetailsPage extends GetView<EventDetailsController> {
   const EventDetailsPage({super.key});
@@ -94,7 +94,7 @@ class EventDetailsPage extends GetView<EventDetailsController> {
                     '${LocaleKeys.localization_app_capacity.tr}: ${event.capacity}'),
                 controller.isFilled.value
                     ? const SizedBox()
-                    : CapacityCounter(
+                    : Capacity(
                         totalCapacity: event.capacity - event.attendance!,
                         initialValue: 1,
                         onChanged: controller.onChanged,
@@ -105,12 +105,20 @@ class EventDetailsPage extends GetView<EventDetailsController> {
                 verticalGap(),
                 Text('${LocaleKeys.localization_app_price.tr}: ${event.price}\$'),
                 verticalGap(),
-                ElevatedButton(
+                Obx(()=> controller.buttonLoading.value
+                    ? ElevatedButton(
+                  onPressed: null,
+                  child: Transform.scale(
+                    scale: 0.5,
+                    child: const CircularProgressIndicator(),
+                  ),
+                )
+                    : ElevatedButton(
                   onPressed: controller.isFilled.value
                       ? null
                       : controller.increaseAttendance,
                   child: Text(LocaleKeys.localization_app_purchase.tr),
-                ),
+                ),),
               ],
             ),
           ),
