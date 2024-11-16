@@ -2,7 +2,7 @@ import 'route_paths.dart';
 
 class RouteNames {
   static const String splash = RoutePaths.splash;
-  static const String login = '${RoutePaths.splash}${RoutePaths.login}';
+  static const String login = RoutePaths.login;
   static const String register = '${RoutePaths.login}${RoutePaths.register}';
   static const String allEvents = RoutePaths.allEvents;
   static const String myEvents = '${RoutePaths.allEvents}${RoutePaths.myEvents}';

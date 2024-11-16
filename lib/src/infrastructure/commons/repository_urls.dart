@@ -6,6 +6,8 @@ class RepositoryUrls {
   static const String _allEvents = '/allEvents';
   static const String _bookmarks = '/bookmarks';
 
+  static Uri getDatabase = Uri.http(_baseUrl);
+
   static Uri getUsers = Uri.http(_baseUrl, _users);
 
   static Uri registerUser = Uri.http(_baseUrl, _users);
@@ -13,6 +15,7 @@ class RepositoryUrls {
   static Uri getAllEvents = Uri.http(_baseUrl,_allEvents);
 
   static Uri addEvent = Uri.http(_baseUrl, _allEvents);
+
 
   static Uri createBookmark = Uri.http(_baseUrl, _bookmarks);
 
