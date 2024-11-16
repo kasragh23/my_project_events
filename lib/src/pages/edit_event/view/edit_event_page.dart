@@ -68,6 +68,7 @@ class EditEventPage extends GetView<EditEventController> {
                           decoration: InputDecoration(
                               labelText: LocaleKeys.localization_app_title.tr),
                           validator: controller.validator,
+                          maxLength: 25,
                         ),
                         TextFormField(
                           controller: controller.editDescription,
@@ -75,6 +76,7 @@ class EditEventPage extends GetView<EditEventController> {
                               labelText:
                                   LocaleKeys.localization_app_description.tr),
                           validator: controller.validator,
+                          maxLength: 50,
                         ),
                         TextFormField(
                           controller: controller.editPrice,
@@ -82,6 +84,7 @@ class EditEventPage extends GetView<EditEventController> {
                               labelText: LocaleKeys.localization_app_price.tr),
                           keyboardType: TextInputType.number,
                           validator: controller.validator,
+                          maxLength: 4,
                         ),
                         TextFormField(
                           controller: controller.editCapacity,
@@ -90,6 +93,7 @@ class EditEventPage extends GetView<EditEventController> {
                                   LocaleKeys.localization_app_capacity.tr),
                           keyboardType: TextInputType.number,
                           validator: controller.validator,
+                          maxLength: 4,
                         ),
                         CircleAvatar(
                           child: ClipOval(
@@ -209,11 +213,21 @@ class EditEventPage extends GetView<EditEventController> {
                           ],
                         ),
                         verticalGap(),
-                        ElevatedButton(
-                          onPressed: controller.editEvent,
-                          child:
-                              Text(LocaleKeys.localization_app_save_changes.tr),
-                        ),
+                        Obx(()=>
+                          controller.isLoading.value
+                              ? ElevatedButton(
+                                  onPressed: null,
+                                  child: Transform.scale(
+                                    scale: 0.5,
+                                    child: const CircularProgressIndicator(),
+                                  ),
+                                )
+                              : ElevatedButton(
+                                  onPressed: controller.editEvent,
+                                  child: Text(
+                                      LocaleKeys.localization_app_edit_event.tr),
+                                )
+                        )
                       ],
                     ),
                   ),

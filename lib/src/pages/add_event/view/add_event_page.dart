@@ -21,9 +21,9 @@ class AddEventPage extends GetView<AddEventController> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: _appBar(),
-        body: _body(context),
-      );
+    appBar: _appBar(),
+    body: _body(context),
+  );
 
   AppBar _appBar() {
     return AppBar(
@@ -73,25 +73,27 @@ class AddEventPage extends GetView<AddEventController> {
         TextFormField(
           controller: controller.title,
           decoration:
-              InputDecoration(labelText: LocaleKeys.localization_app_title.tr),
+          InputDecoration(labelText: LocaleKeys.localization_app_title.tr),
           validator: controller.validate,
+          maxLength: 25,
         ),
         TextFormField(
           controller: controller.description,
           decoration: InputDecoration(
               labelText: LocaleKeys.localization_app_description.tr),
           validator: controller.validate,
+          maxLength: 50,
         ),
         verticalGap(),
         Obx(
-          () => controller.selectedImage.value.isEmpty
+              () => controller.selectedImage.value.isEmpty
               ? const ClipOval(child: Icon(Icons.image_not_supported))
               : SizedBox(
-                  width: 150,
-                  height: 150,
-                  child: Image.memory(
-                      base64Decode(controller.selectedImage.value)),
-                ),
+            width: 150,
+            height: 150,
+            child: Image.memory(
+                base64Decode(controller.selectedImage.value)),
+          ),
         ),
         verticalGap(),
         ElevatedButton(
@@ -118,15 +120,17 @@ class AddEventPage extends GetView<AddEventController> {
           keyboardType: TextInputType.number,
           validator: controller.validate,
           inputFormatters: controller.capacityFormatters,
+          maxLength: 4,
         ),
         TextFormField(
           controller: controller.price,
           decoration:
-              InputDecoration(labelText: LocaleKeys.localization_app_price.tr),
+          InputDecoration(labelText: LocaleKeys.localization_app_price.tr),
           keyboardType: TextInputType.number,
           validator: controller.validate,
           inputFormatters: controller.priceFormatters,
           onChanged: (value) => int.parse(value),
+          maxLength: 4,
         ),
         verticalGap(),
         ElevatedButton(
@@ -141,7 +145,7 @@ class AddEventPage extends GetView<AddEventController> {
     return Row(
       children: [
         Obx(
-          () => DropdownButton<int>(
+              () => DropdownButton<int>(
             hint: Text(LocaleKeys.localization_app_year.tr),
             value: controller.selectedYear.value == 0
                 ? null
@@ -149,9 +153,9 @@ class AddEventPage extends GetView<AddEventController> {
             items: controller.years
                 .map<DropdownMenuItem<int>>(
                     (int value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        ))
+                  value: value,
+                  child: Text(value.toString()),
+                ))
                 .toList(),
             onChanged: (value) {
               controller.selectedYear.value = value!;
@@ -161,7 +165,7 @@ class AddEventPage extends GetView<AddEventController> {
         horizontalGap(),
         // Month Dropdown
         Obx(
-          () => DropdownButton<int>(
+              () => DropdownButton<int>(
             hint: Text(LocaleKeys.localization_app_month.tr),
             value: controller.selectedMonth.value == 0
                 ? null
@@ -169,9 +173,9 @@ class AddEventPage extends GetView<AddEventController> {
             items: controller.months
                 .map<DropdownMenuItem<int>>(
                     (int value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        ))
+                  value: value,
+                  child: Text(value.toString()),
+                ))
                 .toList(),
             onChanged: (value) {
               controller.selectedMonth.value = value!;
@@ -182,7 +186,7 @@ class AddEventPage extends GetView<AddEventController> {
         horizontalGap(),
         // Day Dropdown
         Obx(
-          () => DropdownButton<int>(
+              () => DropdownButton<int>(
             hint: Text(LocaleKeys.localization_app_day.tr),
             value: controller.selectedDay.value == 0
                 ? null
@@ -190,9 +194,9 @@ class AddEventPage extends GetView<AddEventController> {
             items: controller.days
                 .map<DropdownMenuItem<int>>(
                     (int value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        ))
+                  value: value,
+                  child: Text(value.toString()),
+                ))
                 .toList(),
             onChanged: (value) {
               controller.selectedDay.value = value!;
@@ -207,7 +211,7 @@ class AddEventPage extends GetView<AddEventController> {
     return Row(
       children: [
         Obx(
-          () => DropdownButton<int>(
+              () => DropdownButton<int>(
             hint: Text(LocaleKeys.localization_app_hour.tr),
             value: controller.selectedHour.value == 0
                 ? null
@@ -215,9 +219,9 @@ class AddEventPage extends GetView<AddEventController> {
             items: controller.hours
                 .map<DropdownMenuItem<int>>(
                     (int value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        ))
+                  value: value,
+                  child: Text(value.toString()),
+                ))
                 .toList(),
             onChanged: (value) {
               controller.selectedHour.value = value!;
@@ -227,7 +231,7 @@ class AddEventPage extends GetView<AddEventController> {
         horizontalGap(),
         // Minute Dropdown
         Obx(
-          () => DropdownButton<int>(
+              () => DropdownButton<int>(
             hint: Text(LocaleKeys.localization_app_minute.tr),
             value: controller.selectedMinute.value == 0
                 ? null
@@ -235,9 +239,9 @@ class AddEventPage extends GetView<AddEventController> {
             items: controller.minutes
                 .map<DropdownMenuItem<int>>(
                     (int value) => DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        ))
+                  value: value,
+                  child: Text(value.toString()),
+                ))
                 .toList(),
             onChanged: (value) {
               controller.selectedMinute.value = value!;
