@@ -124,7 +124,7 @@ class LoginPage extends GetView<LoginController> {
             Text(LocaleKeys.localization_app_remember_me.tr),
           ],
         ),
-        verticalGap(),
+        smallVertical(),
         Row(
           children: [
             Obx(
@@ -137,7 +137,6 @@ class LoginPage extends GetView<LoginController> {
             Text(LocaleKeys.localization_app_stay_logged_in.tr),
           ],
         ),
-        smallVertical(),
         Obx(
           () => controller.isLoading.value
               ? ElevatedButton(
