@@ -17,6 +17,7 @@ class BookmarksController extends GetxController {
   RxList bookmarkIds = [].obs;
   int? bookmarkId;
   final int userId;
+  RxBool isLoading = false.obs, isRetryMode = false.obs;
   RxBool get isEmpty=> getParam().isEmpty.obs;
 
   BookmarksController({required this.userId});
@@ -28,10 +29,13 @@ class BookmarksController extends GetxController {
   }
 
   Future<void> getBookmarks() async {
+    isLoading.value = true;
     final resultOrException = await _repository.getBookmarks(userId);
     resultOrException.fold(
           (exception) {
-        return showSnackBar(exception);
+            isLoading.value = false;
+            isRetryMode.value = true;
+        showSnackBar(exception);
       },
           (map) {
         bookmarkIds.value = map['bookmarks'];
@@ -44,7 +48,7 @@ class BookmarksController extends GetxController {
   String getParam() {
     String param = '';
     for (int booked in bookmarkIds) {
-      param = '${param}&id=$booked';
+      param = '$param&id=$booked';
     }
     return param;
   }
@@ -54,13 +58,16 @@ class BookmarksController extends GetxController {
   }
 
   Future<void> getEventsFromBookmark() async {
-    // if(getParam().isEmpty) Get.back(result: true);
     final result = await _repository.getEventsFromBookmark(getParam());
     result.fold(
-          (exception) => showSnackBar(exception),
+          (exception) {
+            isLoading.value = false;
+            isRetryMode.value = true;
+            showSnackBar(exception);
+          },
           (event) {
              bookmarks.value = event;
-
+             isLoading.value = false;
           },
     );
   }

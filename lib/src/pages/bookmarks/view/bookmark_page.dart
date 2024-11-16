@@ -44,76 +44,91 @@ class BookmarksPage extends GetView<BookmarksController> {
       ),
       body: Center(
         child: Obx(
-          () => Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-            child: SizedBox(
-              width: responsiveWidth(context),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 10),
-                    child: TextField(
-                      controller: controller.searchController,
+          () {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (controller.isRetryMode.value) {
+              return Center(
+                child: ElevatedButton(
+                  onPressed: () => controller.getBookmarks,
+                  child: Text(LocaleKeys.localization_app_retry.tr),
+                ),
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                child: SizedBox(
+                  width: responsiveWidth(context),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 10),
+                        child: TextField(
+                          controller: controller.searchController,
 
-                      // Update search query
-                      decoration: InputDecoration(
-                          isDense: true,
-                          hintText:
-                              LocaleKeys.localization_app_search_bookmarks.tr,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          prefixIcon: IconButton(
-                            icon: const Icon(Icons.search),
-                            onPressed: controller.filterEvents,
-                          ),
-                          suffixIcon: IconButton(
-                              onPressed: controller.clearSearch,
-                              icon: const Icon(Icons.cancel_outlined))),
-                    ),
-                  ),
-                  controller.isEmpty.value
-                      ? const SizedBox()
-                      : Expanded(
-                          child: controller.searchingMode.value
-                              ? ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      verticalGap(),
-                                  itemCount: controller.filteredEvents.length,
-                                  itemBuilder: (context, index) {
-                                    final event =
-                                        controller.filteredEvents[index];
-                                    return BookmarkWidgets(
-                                        event: event,
-                                        bookmarks: controller.bookmarks,
-                                        onToggle: () =>
-                                            controller.toggleBookmark(event.id),
-                                        onPressed: () => controller
-                                            .goToEventDetails(event.id));
-                                  })
-                              : ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      verticalGap(),
-                                  itemCount: controller.bookmarks.length,
-                                  itemBuilder: (context, index) {
-                                    final event = controller.bookmarks[index];
-                                    return BookmarkWidgets(
-                                        event: event,
-                                        bookmarks: controller.bookmarkIds,
-                                        onToggle: () =>
-                                            controller.toggleBookmark(event.id),
-                                        onPressed: () => controller
-                                            .goToEventDetails(event.id));
-                                  },
-                                ),
+                          // Update search query
+                          decoration: InputDecoration(
+                              isDense: true,
+                              hintText: LocaleKeys
+                                  .localization_app_search_bookmarks.tr,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              filled: true,
+                              fillColor: Colors.white,
+                              prefixIcon: IconButton(
+                                icon: const Icon(Icons.search),
+                                onPressed: controller.filterEvents,
+                              ),
+                              suffixIcon: IconButton(
+                                  onPressed: controller.clearSearch,
+                                  icon: const Icon(Icons.cancel_outlined))),
                         ),
-                ],
-              ),
-            ),
-          ),
+                      ),
+                      controller.isEmpty.value
+                          ? const SizedBox()
+                          : Expanded(
+                              child: controller.searchingMode.value
+                                  ? ListView.separated(
+                                      separatorBuilder: (context, index) =>
+                                          verticalGap(),
+                                      itemCount:
+                                          controller.filteredEvents.length,
+                                      itemBuilder: (context, index) {
+                                        final event =
+                                            controller.filteredEvents[index];
+                                        return BookmarkWidgets(
+                                            event: event,
+                                            bookmarks: controller.bookmarks,
+                                            onToggle: () => controller
+                                                .toggleBookmark(event.id),
+                                            onPressed: () => controller
+                                                .goToEventDetails(event.id));
+                                      })
+                                  : ListView.separated(
+                                      separatorBuilder: (context, index) =>
+                                          verticalGap(),
+                                      itemCount: controller.bookmarks.length,
+                                      itemBuilder: (context, index) {
+                                        final event =
+                                            controller.bookmarks[index];
+                                        return BookmarkWidgets(
+                                            event: event,
+                                            bookmarks: controller.bookmarkIds,
+                                            onToggle: () => controller
+                                                .toggleBookmark(event.id),
+                                            onPressed: () => controller
+                                                .goToEventDetails(event.id));
+                                      },
+                                    ),
+                            ),
+                    ],
+                  ),
+                ),
+              );
+            }
+          },
         ),
       ),
     );
