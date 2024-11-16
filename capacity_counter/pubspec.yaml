@@ -1,5 +1,5 @@
-name: my_project
-description: "A new Flutter project."
+name: capacity_counter
+description: "A Package for counting capacity of attendees of events"
 version: 0.0.1
 homepage:
 
@@ -8,16 +8,8 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  either_dart: ^1.0.0
   flutter:
     sdk: flutter
-  get: ^4.6.6
-  get_cli: ^1.8.1
-  http: ^1.2.2
-  image_picker: ^1.1.2
-  shared_preferences: ^2.3.2
-  capacity_counter:
-    path: ./capacity_counter
 
 dev_dependencies:
   flutter_test:

@@ -54,6 +54,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.1.1"
+  capacity_counter:
+    dependency: transitive
+    description:
+      path: "../capacity_counter"
+      relative: true
+    source: path
+    version: "0.0.1"
   characters:
     dependency: transitive
     description:

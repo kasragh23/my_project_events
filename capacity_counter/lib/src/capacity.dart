@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+export './capacity.dart';
 
-class CapacityCounter extends StatefulWidget {
+class Capacity extends StatefulWidget {
   final int totalCapacity;
   final int initialValue;
   final void Function(int) onChanged;
 
-  const CapacityCounter({
+  const Capacity({
     super.key,
     required this.totalCapacity,
     required this.initialValue,
@@ -13,10 +14,10 @@ class CapacityCounter extends StatefulWidget {
   });
 
   @override
-  _CapacityCounterState createState() => _CapacityCounterState();
+  _CapacityState createState() => _CapacityState();
 }
 
-class _CapacityCounterState extends State<CapacityCounter> {
+class _CapacityState extends State<Capacity> {
   int _tickets = 1;
   @override
   void initState() {
