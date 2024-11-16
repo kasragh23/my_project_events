@@ -17,6 +17,8 @@ class AllEventsController extends GetxController {
       <AllEventsModel>[].obs; // For filtered results
   RxString searchQuery = ''.obs; // Reactive search query
   RxBool searchingMode = false.obs;
+  RxBool filterByTimeEnabled = false.obs;
+  RxBool filterByCapacityEnabled = false.obs;
   final searchController = TextEditingController();
   int? bookmarkId;
   RxInt minPrice = 0.obs;
@@ -45,40 +47,66 @@ class AllEventsController extends GetxController {
         return showSnackBar(exception);
       },
       (event) async {
-        if(bookmarks.isNotEmpty) {
+        if (bookmarks.isNotEmpty) {
           await getBookmarks();
-        } else{
-        allEvents.value = event;
-        filteredEvents.addAll(event);
-        // Initially, show all events
-        setMinMaxPrice();
-        isLoading.value = false;
-
-        }},
+        } else {
+          allEvents.value = event;
+          filteredEvents.addAll(event);
+          // Initially, show all events
+          setMinMaxPrice();
+          isLoading.value = false;
+        }
+      },
     );
   }
 
-  void filterEvents() {
+  void searchEvents() {
     searchingMode.value = true;
     searchQuery.value = searchController.text;
     List<AllEventsModel> tempList = allEvents
         .where((event) =>
             event.title.toLowerCase().contains(searchQuery.value.toLowerCase()))
         .toList();
-    tempList = tempList
+    filteredEvents.value = tempList;
+  }
+
+  void filterEventsByPrice() {
+    searchingMode.value = true;
+    searchQuery.value = searchController.text;
+    List<AllEventsModel> tempList = allEvents
         .where((event) =>
             event.price >= selectedMinPrice.value &&
             event.price <= selectedMaxPrice.value)
         .toList();
+    filteredEvents.value = tempList;
 
-    tempList.sort((a, b) => sortByDateAscending.value
-        ? a.date!.compareTo(b.date!)
-        : b.date!.compareTo(a.date!));
+    if (filterByTimeEnabled.value) filterEventsByTime();
+    if (filterByCapacityEnabled.value) filterEventsByCapacity();
+  }
 
-    //
-    // tempList.sort((a, b) => sortByCapacityAscending.value
-    //     ? (b.capacity - b.attendance!).compareTo(a.capacity - a.attendance!)
-    //     : (a.capacity - a.attendance!).compareTo(b.capacity - b.attendance!));
+  void filterEventsByTime() {
+    // Show only events with available time (future events)
+    List<AllEventsModel> tempList = <AllEventsModel>[].obs;
+    if (filterByTimeEnabled.value) {
+      tempList = allEvents.where((event) {
+        final currentDate = DateTime.now();
+        return event.date!.isAfter(currentDate); // Future events only
+      }).toList();
+    }
+
+    filteredEvents.value = tempList;
+  }
+
+  void filterEventsByCapacity() {
+    // Show only events with available capacity
+    List<AllEventsModel> tempList = <AllEventsModel>[].obs;
+
+    if (filterByCapacityEnabled.value) {
+      tempList = allEvents.where((event) {
+        final availableCapacity = event.capacity - event.attendance!;
+        return availableCapacity > 0; // Events with capacity left
+      }).toList();
+    }
 
     filteredEvents.value = tempList;
   }
@@ -95,25 +123,25 @@ class AllEventsController extends GetxController {
       maxPrice.value = allEvents.map((event) => event.price).reduce(max);
       selectedMinPrice.value = minPrice.value;
       selectedMaxPrice.value = maxPrice.value;
-      filterEvents();
+      filterEventsByPrice();
     }
   }
 
   void onPriceRangeChanged(RangeValues values) {
     minPrice.value = values.start.toInt();
     maxPrice.value = values.end.toInt();
-    filterEvents();
+    filterEventsByPrice();
   }
 
-  void onSortOrderChangedByCapacity(bool ascending) {
-    sortByCapacityAscending.value = ascending;
-    filterEvents();
-  }
+  // void onSortOrderChangedByCapacity(bool ascending) {
+  //   sortByCapacityAscending.value = ascending;
+  //   filterEvents();
+  // }
 
-  void onSortOrderChanged(bool ascending) {
-    sortByDateAscending.value = ascending;
-    filterEvents();
-  }
+  // void onSortOrderChanged(bool ascending) {
+  //   sortByDateAscending.value = ascending;
+  //   filterEvents();
+  // }
 
   Future<void> getBookmarks() async {
     final resultOrException = await _repository.getBookmarks(userId);
@@ -132,12 +160,13 @@ class AllEventsController extends GetxController {
     if (bookmarkId == null) {
       // No bookmark entry exists; create one
       final List newBookedEvent = [eventId];
-      final BookmarksDto dto = BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
+      final BookmarksDto dto =
+          BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
 
       final result = await _repository.createBookmark(dto);
       result.fold(
-            (exception) => showSnackBar(exception),
-            (_) {
+        (exception) => showSnackBar(exception),
+        (_) {
           getBookmarks(); // Reload bookmarks after creation
         },
       );
@@ -147,12 +176,13 @@ class AllEventsController extends GetxController {
         // Remove bookmark
         final List newBookedEvent = bookmarks;
         newBookedEvent.remove(eventId);
-        final BookmarksDto dto = BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
+        final BookmarksDto dto =
+            BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
 
         final result = await _repository.removeBookmark(bookmarkId!, dto);
         result.fold(
-              (exception) => showSnackBar(exception),
-              (_) {
+          (exception) => showSnackBar(exception),
+          (_) {
             getBookmarks();
           },
         );
@@ -160,12 +190,13 @@ class AllEventsController extends GetxController {
         // Add bookmark
         final List newBookedEvent = bookmarks;
         newBookedEvent.add(eventId);
-        final BookmarksDto dto = BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
+        final BookmarksDto dto =
+            BookmarksDto(userId: userId, bookedEvents: newBookedEvent);
 
         final result = await _repository.addBookmark(bookmarkId!, dto);
         result.fold(
-              (exception) => showSnackBar(exception),
-              (_) {
+          (exception) => showSnackBar(exception),
+          (_) {
             getBookmarks();
           },
         );

@@ -67,23 +67,25 @@ class AllEventsPage extends GetView<AllEventsController> {
                   Obx(
                     () => RangeSlider(
                       values: RangeValues(
-                        controller.minPrice.value.toDouble(),
-                        controller.maxPrice.value.toDouble(),
+                        controller.selectedMinPrice.value.toDouble(),
+                        controller.selectedMaxPrice.value.toDouble(),
                       ),
                       min: controller.minPrice.value.toDouble(),
                       max: controller.maxPrice.value.toDouble(),
-                      divisions: 10,
+                      divisions: 1000,
                       activeColor: Colors.greenAccent.shade100,
                       labels: RangeLabels(
-                        '${controller.minPrice.value} \$',
-                        '${controller.maxPrice.value} \$',
+                        '${controller.selectedMinPrice.value} \$',
+                        '${controller.selectedMaxPrice.value} \$',
                       ),
                       onChanged: (RangeValues values) {
                         controller.selectedMinPrice.value =
                             values.start.toInt();
                         controller.selectedMaxPrice.value = values.end.toInt();
+                      },
+                      onChangeEnd: (RangeValues values) {
                         controller
-                            .filterEvents(); // Filter with the updated selected price range
+                            .filterEventsByPrice(); // Trigger filtering when slider changes end
                       },
                     ),
                   ),
@@ -92,11 +94,12 @@ class AllEventsPage extends GetView<AllEventsController> {
                       LocaleKeys.localization_app_sort_by_date.tr,
                       style: const TextStyle(color: Colors.white),
                     ),
-                    trailing: Switch(
-                      value: controller.sortByDateAscending.value,
+                    trailing: Checkbox(
+                      value: controller.filterByTimeEnabled.value,
                       activeColor: Colors.greenAccent.shade100,
                       onChanged: (value) {
-                        controller.onSortOrderChanged(value);
+                        controller.filterByTimeEnabled.value = value!;
+                        controller.filterEventsByPrice(); // Reapply all filters
                       },
                     ),
                   ),
@@ -105,15 +108,14 @@ class AllEventsPage extends GetView<AllEventsController> {
                       LocaleKeys.localization_app_sort_by_available_capacity.tr,
                       style: const TextStyle(color: Colors.white),
                     ),
-                    trailing: Obx(() {
-                      return Switch(
-                        activeColor: Colors.greenAccent.shade100,
-                        value: controller.sortByCapacityAscending.value,
-                        onChanged: (value) {
-                          controller.onSortOrderChangedByCapacity(value);
-                        },
-                      );
-                    }),
+                    trailing: Checkbox(
+                      value: controller.filterByCapacityEnabled.value,
+                      activeColor: Colors.greenAccent.shade100,
+                      onChanged: (value) {
+                        controller.filterByCapacityEnabled.value = value!;
+                        controller.filterEventsByPrice(); // Reapply all filters
+                      },
+                    ),
                   )
                 ],
               ),
@@ -158,7 +160,7 @@ class AllEventsPage extends GetView<AllEventsController> {
                               fillColor: Colors.white,
                               prefixIcon: IconButton(
                                 icon: const Icon(Icons.search),
-                                onPressed: controller.filterEvents,
+                                onPressed: controller.searchEvents,
                               ),
                               suffixIcon: IconButton(
                                   onPressed: controller.clearSearch,
