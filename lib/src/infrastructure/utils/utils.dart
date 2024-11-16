@@ -12,6 +12,9 @@ Widget smallHorizontal({double? w}){
 Widget verticalGap({double? h}){
   return SizedBox(height:h ?? 15);
 }
+Widget smallVertical({double? h}){
+  return SizedBox(height:h ?? 5);
+}
 
 void showSnackBar(String title){
   Get.showSnackbar(

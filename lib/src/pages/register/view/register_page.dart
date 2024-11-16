@@ -39,10 +39,13 @@ class RegisterPage extends GetView<RegisterController> {
             ),
           ],
         ),
-        body: Center(
-          child: SizedBox(
-            width: responsiveWidth(context),
-            child: _body(),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Center(
+            child: SizedBox(
+              width: responsiveWidth(context),
+              child: _body(),
+            ),
           ),
         ),
       );
@@ -159,9 +162,19 @@ class RegisterPage extends GetView<RegisterController> {
         verticalGap(),
         _genderRadio(),
         verticalGap(),
-        ElevatedButton(
-          onPressed: controller.register,
-          child: Text(LocaleKeys.localization_app_register.tr),
+        Obx(
+          () => controller.isLoading.value
+              ? ElevatedButton(
+                  onPressed: null,
+                  child: Transform.scale(
+                    scale: 0.5,
+                    child: const CircularProgressIndicator(),
+                  ),
+                )
+              : ElevatedButton(
+                  onPressed: controller.register,
+                  child: Text(LocaleKeys.localization_app_register.tr),
+                ),
         )
       ],
     );
