@@ -46,117 +46,133 @@ class MyEventsPage extends GetView<MyEventsController> {
       ),
       body: Center(
         child: Obx(
-          () => Padding(
-            padding: const EdgeInsets.all(30),
-            child: SizedBox(
-              width: responsiveWidth(context),
-              child: ListView.separated(
-                separatorBuilder: (context, index) => verticalGap(),
-                itemCount: controller.myEvents.length,
-                itemBuilder: (context, index) {
-                  final event = controller.myEvents[index];
-                  String date =
-                      "${event.date?.year}-${event.date!.month}-${event.date!.day}";
+          () {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (controller.isRetryMode.value) {
+              return Center(
+                child: ElevatedButton(
+                  onPressed: () => controller.getEventByUserId,
+                  child: Text(LocaleKeys.localization_app_retry.tr),
+                ),
+              );
+            } else {
+              return Padding(
+                padding: const EdgeInsets.all(30),
+                child: SizedBox(
+                  width: responsiveWidth(context),
+                  child: ListView.separated(
+                    separatorBuilder: (context, index) => verticalGap(),
+                    itemCount: controller.myEvents.length,
+                    itemBuilder: (context, index) {
+                      final event = controller.myEvents[index];
+                      String date =
+                          "${event.date?.year}-${event.date!.month}-${event.date!.day}";
 
-                  String time = "${event.date!.hour}:${event.date!.minute}";
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 5),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(12),
-                      color: const Color.fromARGB(255, 255, 254, 245),
-                    ),
-                    child: Row(
-                        // onTap: () {
-                        //   print(event.id);
-                        //   controller.goToEditEvent(event.id!);
-                        // },
-                        children: [
-                          if (event.poster!.isNotEmpty)
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.memory(
-                                height: 80,
+                      String time = "${event.date!.hour}:${event.date!.minute}";
+                      return Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5),
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                          borderRadius: BorderRadius.circular(12),
+                          color: const Color.fromARGB(255, 255, 254, 245),
+                        ),
+                        child: Row(
+                            // onTap: () {
+                            //   print(event.id);
+                            //   controller.goToEditEvent(event.id!);
+                            // },
+                            children: [
+                              if (event.poster!.isNotEmpty)
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.memory(
+                                    height: 80,
+                                    width: 80,
+                                    base64Decode(event.poster!),
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              else
+                                const Icon(Icons.image_not_supported,
+                                    color: Colors.grey),
+                              horizontalGap(),
+
+                              // Column 2: Title and Description
+                              SizedBox(
+                                width: size(context),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      event.title,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      event.description,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              horizontalGap(),
+
+                              // Column 3: Event Details
+                              SizedBox(
                                 width: 80,
-                                base64Decode(event.poster!),
-                                fit: BoxFit.cover,
-                              ),
-                            )
-                          else
-                            const Icon(Icons.image_not_supported,
-                                color: Colors.grey),
-                          horizontalGap(),
-
-                          // Column 2: Title and Description
-                          SizedBox(
-                            width: size(context),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  event.title,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(date),
+                                    Text(time),
+                                    Text(
+                                        '${LocaleKeys.localization_app_capacity.tr}: ${event.capacity! - event.attendance!} / ${event.capacity}'),
+                                  ],
                                 ),
-                                Text(
-                                  event.description,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                          horizontalGap(),
-
-                          // Column 3: Event Details
-                          SizedBox(
-                            width: 80,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(date),
-                                Text(time),
-                                Text(
-                                    '${LocaleKeys.localization_app_capacity.tr}: ${event.capacity! - event.attendance!} / ${event.capacity}'),
-                              ],
-                            ),
-                          ),
-                          const Spacer(),
-
-                          // Column 4: Bookmark, Price, and Purchase Button
-
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(
-                                '${event.price}\$',
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
                               ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              IconButton(
-                                  onPressed: () =>
-                                      controller.goToEditEvent(event.id!),
-                                  icon: const Icon(Icons.edit)),
-                              IconButton(
-                                  onPressed: () =>
-                                      controller.deleteEvent(event.id!),
-                                  icon: const Icon(Icons.delete))
-                            ],
-                          ),
-                        ]),
-                  );
-                },
-              ),
-            ),
-          ),
+                              const Spacer(),
+
+                              // Column 4: Bookmark, Price, and Purchase Button
+
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    '${event.price}\$',
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  IconButton(
+                                      onPressed: () =>
+                                          controller.goToEditEvent(event.id!),
+                                      icon: const Icon(Icons.edit)),
+                                  IconButton(
+                                      onPressed: () =>
+                                          controller.deleteEvent(event.id!),
+                                      icon: const Icon(Icons.delete))
+                                ],
+                              ),
+                            ]),
+                      );
+                    },
+                  ),
+                ),
+              );
+            }
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(

@@ -9,7 +9,7 @@ import '../repositories/my_events_repository.dart';
 class MyEventsController extends GetxController {
   final MyEventsRepository _repository = MyEventsRepository();
   RxList<MyEventsModel> myEvents = <MyEventsModel>[].obs;
-  RxBool isLoading= false.obs, isRetry = false.obs;
+  RxBool isLoading= false.obs, isRetryMode = false.obs;
 
   final int userId;
 
@@ -22,14 +22,18 @@ class MyEventsController extends GetxController {
   }
 
   Future<void> getEventByUserId({required int userId}) async {
+    isLoading.value = true;
     final resultOrException =
         await _repository.getMyEvents(userId);
     resultOrException.fold(
       (exception) {
-        return showSnackBar(exception);
+        isLoading.value = false;
+        isRetryMode.value = true;
+        showSnackBar(exception);
       },
       (events) {
         myEvents.value = events;
+        isLoading.value = false;
       },
     );
   }
