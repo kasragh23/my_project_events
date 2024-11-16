@@ -44,5 +44,6 @@
     "username": "username",
     "year": "Year"
   },
+  "localization_app_logout": "Logout",
   "localization_app_stay_logged_in": "Stay Logged in"
 }

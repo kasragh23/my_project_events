@@ -44,5 +44,6 @@
     "username": "نام کاربری",
     "year": "سال"
   },
+  "localization_app_logout": "خروج",
   "localization_app_stay_logged_in": "ماندن در حساب"
 }

@@ -64,6 +64,7 @@ class LocaleKeys {
   static const localization_app_title = 'localization_app_title';
   static const localization_app_username = 'localization_app_username';
   static const localization_app_year = 'localization_app_year';
+  static const localization_app_logout = 'localization_app_logout';
   static const localization_app_stay_logged_in =
       'localization_app_stay_logged_in';
 }
@@ -113,6 +114,7 @@ class Locales {
     'localization_app_title': 'Title',
     'localization_app_username': 'username',
     'localization_app_year': 'Year',
+    'localization_app_logout': 'Logout',
     'localization_app_stay_logged_in': 'Stay Logged in',
   };
   static const fa_IR = {
@@ -160,6 +162,7 @@ class Locales {
     'localization_app_title': 'عنوان',
     'localization_app_username': 'نام کاربری',
     'localization_app_year': 'سال',
+    'localization_app_logout': 'خروج',
     'localization_app_stay_logged_in': 'ماندن در حساب',
   };
 }
